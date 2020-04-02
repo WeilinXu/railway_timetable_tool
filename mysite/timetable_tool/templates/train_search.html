@@ -28,7 +28,7 @@ Date <input type="date" name="date" autocomplete="off" required>
     {% for train in trains %}
     <tr>
             
-        <td> <a href="{% url 'timetable_tool:route_search' train.train_link date_input%}">{{train.train_number }}</a> </td>
+        <td> <a href="{% url 'timetable_tool:route_search2' train.train_link date_input%}">{{train.train_number }}</a> </td>
         <td>{{ train.station_depart }} </td>
         <td>{{ train.station_dest}}</td>
         <td>{{ train.station_from }} </td>

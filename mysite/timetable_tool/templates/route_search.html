@@ -18,7 +18,7 @@ Date <input type="date" name="date" autocomplete="off" required>
     {% for stop in stops %}
     <tr>
         <td> {{ stop.station_no }} </td>
-        <td> <a href = "{% url 'timetable_tool:station_search' stop.station_name date_input %}">{{ stop.station_name }}</a> </td>
+        <td> <a href = "{% url 'timetable_tool:station_search2' stop.station_name date_input %}">{{ stop.station_name }}</a> </td>
     </tr>
     {% endfor %}
 </table>

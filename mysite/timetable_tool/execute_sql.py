@@ -4,12 +4,13 @@ import datetime
 def query_db(query, args=(), one=False, commit=False):
     cursor = connection.cursor()
     cur = cursor.execute(query, args)
+    columns = [col[0] for col in cur.description]
     if(commit):
         transaction.commit_unless_managed()
     if one:
-        rv = cur.fetchone()
+        rv = [dict(zip(columns, row)) for row in cur.fetchone()]
     else:
-        rv = cur.fetchall()
+        rv = [dict(zip(columns, row)) for row in cur.fetchall()]
     return rv
 
 def replace_from_dash(route_num):
@@ -37,7 +38,7 @@ def get_route_query(route_in, date_in):
     route_query = "SELECT S.id AS station_id, S.station_name AS station_name, " \
                         + "T.id AS train_record_id, TR.station_no AS station_no " \
                     + "FROM timetable_tool_stations S, timetable_tool_train_records T, timetable_tool_stop_records TR " \
-                    + "WHERE T.id = TR.id AND S.id = TR.id "\
+                    + "WHERE T.id = TR.train_record_id AND S.id = TR.station_id "\
                         + "AND T.train_number = %s "  \
                     + " ORDER BY station_no" 
     route_result = query_db(route_query, args = [route_in])
@@ -52,7 +53,7 @@ def get_station_query(station_in, date_in):
                     + "FROM timetable_tool_stations S, timetable_tool_train_records T, " \
                     + "timetable_tool_stop_records TR, timetable_tool_stations S1, timetable_tool_stations S2 " \
                     + "WHERE S.station_name = %s " \
-                        + "AND S.id = TR.id AND T.id = TR.id " \
+                        + "AND S.id = TR.station_id AND T.id = TR.train_record_id " \
                     +"AND T.train_from_id = S1.id AND T.train_to_id = S2.id " \
                     + "ORDER BY T.train_number"
     station_results = query_db(station_query, args = [station_in])
@@ -70,9 +71,9 @@ def get_train_query(depart_in, dest_in, date_in):
                         + "timetable_tool_stations S1, timetable_tool_stations S2 " \
                     + "WHERE Sfrom.station_name = %s " \
                         + "AND Sto.station_name = %s " \
-                        + "AND Sfrom.id = TRfrom.id AND Sto.id = TRto.id " \
-                        + "AND TRfrom.station_no < TRto.station_no AND TRfrom.id = TRto.id " \
-                        + "AND TRfrom.id = T.id " \
+                        + "AND Sfrom.id = TRfrom.station_id AND Sto.id = TRto.station_id " \
+                        + "AND TRfrom.station_no < TRto.station_no AND TRfrom.train_record_id = TRto.train_record_id " \
+                        + "AND TRfrom.train_record_id = T.id " \
                         + "AND T.train_from_id = S1.id AND T.train_to_id = S2.id " \
                     + "ORDER BY T.train_number"
     train_results = query_db(train_query, [depart_in, dest_in])

@@ -24,6 +24,6 @@ class train_records(models.Model):  # actual name: timetable_tool_train_records
 class stop_records(models.Model):   # actual name: timetable_tool_stop_records
     class Meta:
         unique_together = (('train_record_id', 'station_id'),)
-    train_record_id = models.ForeignKey(train_records, on_delete=models.CASCADE)
+    train_record = models.ForeignKey(train_records, on_delete=models.CASCADE)
     station = models.ForeignKey(stations, on_delete=models.CASCADE) # station_id
     station_no = models.PositiveSmallIntegerField()
