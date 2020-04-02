@@ -1,0 +1,27 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+<h3> Route Search </h3> 
+
+<form method="post">
+{% csrf_token %}
+Route <input type="text" name="route" autocomplete="off" required>
+Date <input type="date" name="date" autocomplete="off" required>
+<input class="btn" type="submit" name="submit" value="Search">
+</form>
+<p>Stops for <b>{{route_input}}</b> on <b>{{date_input}}</b></p> 
+
+<table>
+    <tr>
+        <th> No. </th> <th> Station </th>
+    </tr>
+    {% for stop in stops %}
+    <tr>
+        <td> {{ stop.station_no }} </td>
+        <td> <a href = "{% url 'timetable_tool:station_search' stop.station_name date_input %}">{{ stop.station_name }}</a> </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
+

@@ -1,0 +1,4 @@
+INSERT INTO stations (station_name) VALUES ('Beijing');
+INSERT INTO stations (station_name) VALUES ('Hohhot');
+INSERT INTO stations (station_name) VALUES ('Baotou');
+

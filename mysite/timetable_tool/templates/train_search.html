@@ -1,0 +1,39 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+<h3> Train Search </h3> 
+
+{% for message in messages %}
+<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message | safe }}
+</div>
+{% endfor %}
+
+<form method="post">
+{% csrf_token %}
+Depart From <input type="text" name="station_depart" autocomplete="off" required>
+Go To <input type="text" name="station_dest" autocomplete="off" required>
+Date <input type="date" name="date" autocomplete="off" required>
+<input class="btn" type="submit" name="submit" value="Search">
+</form>
+<p>Trains from <b>{{depart_input}}</b> to <b>{{dest_input}}</b> on <b>{{date_input}}</b></p> 
+
+<table>
+    <tr> 
+        <th> No. </th> <th>Depart.</th> <th>Dest.</th> <th> From </th> <th> To </th> 
+    </tr>
+    {% for train in trains %}
+    <tr>
+            
+        <td> <a href="{% url 'timetable_tool:route_search' train.train_link date_input%}">{{train.train_number }}</a> </td>
+        <td>{{ train.station_depart }} </td>
+        <td>{{ train.station_dest}}</td>
+        <td>{{ train.station_from }} </td>
+        <td>{{ train.station_to}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

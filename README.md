@@ -11,7 +11,7 @@ django-admin startproject mysite
 
 ```
 
-## Write code:
+## Write code
 Refer to [DJ4E](https://www.dj4e.com/assn/dj4e_install.md) and [DJ4E_hello_world_assignment](https://www.dj4e.com/assn/dj4e_hello.md?PHPSESSID=e57e049f726e5f6ffa231212345a0eb6)
 
 ### Setup project 
@@ -37,6 +37,8 @@ python manage.py createsuperuser
 ```
 
 ### Setup app
+Refer to [django_tutorial3](https://docs.djangoproject.com/en/3.0/intro/tutorial03/)
+
 In `railway_timetable_tool/mysite/`:
 ```
 python manage.py startapp timetable_tool
@@ -52,6 +54,8 @@ Afterwards, register the model in `./railway_timetable_tool/admin.py` and append
 Finally, (in `railway_timetable_tool/mysite/`) check errors by:
 ```
 python manage.py check
+python manage.py makemigrations
+python manage.py migrate --run-syncdb
 ```
 
 and migrate data by:
