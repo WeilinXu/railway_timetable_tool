@@ -5,7 +5,7 @@ __pycache__/
 *.py[cod]
 
 # database file
-*.sqlite3
+mysite/db.sqlite3
 migrations/
 
 # Distribution / packaging
