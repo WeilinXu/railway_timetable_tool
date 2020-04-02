@@ -5,23 +5,25 @@
 <title>{% block title %}{{ settings.APP_NAME }}{% endblock %}</title>
 
 <!-- Replace this value (42-42) with the one provided by the autograder -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="dj4e" content="4a08142c38dbe374195d41c04562d9f8">
 
 <meta name="dj4e-code" content="42158574417258">
 
-<link rel="stylesheet" href="{{STAIC_URL}}css/style.css" type="text/css">
+{% load static %}
 
 <link rel="stylesheet"
     href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"
     crossorigin="anonymous">
-
-<link rel="stylesheet"
+<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+<!-- link rel="stylesheet"
     href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap-theme.min.css"
-    crossorigin="anonymous">
+    crossorigin="anonymous" -->
 
-<link rel="stylesheet"
+<!-- link rel="stylesheet"
     href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css"
-     crossorigin="anonymous">
+     crossorigin="anonymous"-->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
     crossorigin="anonymous"></script>
@@ -33,9 +35,9 @@
   src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
   crossorigin="anonymous"></script>
 
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+<!--link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" -->
 
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+<!--link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" -->
 
 <meta name="dj4e-version" content="2020-03-26">
 
@@ -57,11 +59,14 @@
         </div>
     {% endfor %}
     {% endif %}
-
 {% endblock %}
+
 {% block content %}
 {% endblock %}
+
 </div>
-{% block footer %} {% endblock %}
+<div class="container">
+    {% block footer %} {% endblock %}
+</div>
 </body>
 </html>

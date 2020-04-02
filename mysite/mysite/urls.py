@@ -33,6 +33,7 @@ urlpatterns = [
 ]
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(str(BASE_DIR))
 SITE_ROOT = os.path.join(BASE_DIR, 'site')
 # TODO: change SITE_ROOT to BASE_DIR
 urlpatterns += [
@@ -41,6 +42,10 @@ urlpatterns += [
         name='site_path'
     ),
 ]
+
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls.static import static
+urlpatterns += staticfiles_urlpatterns()
 
 # Switch to social login if it is configured - Keep for later
 try:
