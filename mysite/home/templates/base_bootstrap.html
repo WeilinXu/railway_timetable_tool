@@ -7,7 +7,9 @@
 <!-- Replace this value (42-42) with the one provided by the autograder -->
 <meta name="dj4e" content="4a08142c38dbe374195d41c04562d9f8">
 
-<meta name="dj4e-code" content="42158211086250">
+<meta name="dj4e-code" content="42158574417258">
+
+<link rel="stylesheet" href="{{STAIC_URL}}css/style.css" type="text/css">
 
 <link rel="stylesheet"
     href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"
@@ -35,14 +37,31 @@
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
 
-<meta name="wa4e-version" content="2019-10-25">
+<meta name="dj4e-version" content="2020-03-26">
+
+{% block head %} {% endblock %}
 
 </head>
 <body>
-{% block navbar %} {% endblock %}
 <div class="container">
-    {% block content %}
-    {% endblock %}
+{% block navbar %} {% endblock %}
+{% block welcome %} {% endblock %}
+{% block messages %}
+    {% if messages %}
+    {% for msg in messages %}
+        <div class="alert {{ msg.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        {{msg.message | safe }}
+        </div>
+    {% endfor %}
+    {% endif %}
+
+{% endblock %}
+{% block content %}
+{% endblock %}
 </div>
+{% block footer %} {% endblock %}
 </body>
 </html>

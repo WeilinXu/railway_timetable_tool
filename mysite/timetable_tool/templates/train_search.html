@@ -1,16 +1,7 @@
-{% extends "base_bootstrap.html" %}
+{% extends "base_menu.html" %}
 
 {% block content %}
 <h3> Train Search </h3> 
-
-{% for message in messages %}
-<div class="alert {{ message.tags }} alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ message | safe }}
-</div>
-{% endfor %}
 
 <form method="post">
 {% csrf_token %}

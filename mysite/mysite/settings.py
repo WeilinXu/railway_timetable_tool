@@ -11,11 +11,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from django.contrib.messages import constants as messages   ## new added
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Used for a default title
+APP_NAME = 'TimetableToolProj'   # Add
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -38,10 +40,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     
+    # Extensions - installed with pip3 / requirements.txt
+    'django_extensions', 
+    'crispy_forms',  
+    'rest_framework', 
+    'social_django',  
+
     'home.apps.HomeConfig',    # new added
     'timetable_tool.apps.TimetableToolConfig'   # new added
 ]
+
+# When we get to crispy forms :)
+CRISPY_TEMPLATE_PACK = 'bootstrap3' # Add
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -67,6 +79,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'home.context_processors.settings',      # Add
+                'social_django.context_processors.backends',  # Add
+                'social_django.context_processors.login_redirect', # Add
             ],
         },
     },
@@ -75,6 +90,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 ## new added
+from django.contrib.messages import constants as messages   ## new added
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-info',
         messages.INFO: 'alert-info',
@@ -131,3 +147,61 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Add the settings below
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
+
+# Configure the social login
+try:
+    from . import github_settings 
+    SOCIAL_AUTH_GITHUB_KEY = github_settings.SOCIAL_AUTH_GITHUB_KEY
+    SOCIAL_AUTH_GITHUB_SECRET = github_settings.SOCIAL_AUTH_GITHUB_SECRET
+except:
+    print('When you want to use social login, please see mysite/github_settings-dist.py')
+
+# https://python-social-auth.readthedocs.io/en/latest/configuration/django.html#authentication-backends
+# https://simpleisbetterthancomplex.com/tutorial/2016/10/24/how-to-add-social-login-to-django.html
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    # 'social_core.backends.twitter.TwitterOAuth',
+    # 'social_core.backends.facebook.FacebookOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+
+# Don't set default LOGIN_URL - let django.contrib.auth set it when it is loaded
+# LOGIN_URL = '/accounts/login'
+
+# https://coderwall.com/p/uzhyca/quickly-setup-sql-query-logging-django
+# https://stackoverflow.com/questions/12027545/determine-if-django-is-running-under-the-development-server
+
+'''  # Leave off for now
+import sys
+if (len(sys.argv) >= 2 and sys.argv[1] == 'runserver'):
+    print('Running locally')
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+            }
+        },
+        'loggers': {
+            'django.db.backends': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
+        }
+    }
+'''

@@ -8,29 +8,43 @@
     </div>
     <!-- https://stackoverflow.com/questions/22047251/django-dynamically-get-view-url-and-check-if-its-the-current-page -->
     <ul class="nav navbar-nav">
-      {% url 'ads' as ads %}
-      <li {% if request.get_full_path == ads %}class="active"{% endif %}>
-          <a href="{% url 'ads:all' %}">Ads</a></li>
+        {% url 'timetable_tool:train_search' as ts %}
+        <li {% if request.get_full_path == ts %}class="active"{% endif %}>
+            <a href="{% url 'timetable_tool:train_search'  %}">Train Search</a></li>
+
+        {% url 'timetable_tool:route_search' as rs %}
+        <li {% if request.get_full_path == rs %}class="active"{% endif %}>
+            <a href="{% url 'timetable_tool:route_search'  %}">Route Search</a></li>
+        
+        {% url 'timetable_tool:station_search' as ss %}
+        <li {% if request.get_full_path == ss %}class="active"{% endif %}>
+            <a href="{% url 'timetable_tool:station_search'  %}">Station Search</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
         <li>
-        <a href="{% url 'ads:ad_create' %}">Create Ad</a>
+            <a href="/timetable_tool">Timetable Tool</a>
         </li>
         <li class="dropdown">
             <a href="#" data-toggle="dropdown" class="dropdown-toggle">
                 <img style="width: 25px;" src="{{ user|gravatar:60 }}"/><b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="{% url 'logout' %}?next={% url 'ads:all' %}">Logout</a></li>
+                <li><a href="{% url 'logout' %}?next={% url 'timetable_tool:station_search' %}">Logout</a></li>
             </ul>
         </li>
         {% else %}
         <li>
-        <a href="{% url 'login' %}?next={% url 'ads:all' %}">Login</a>
+        <a href="{% url 'login' %}?next={% url 'timetable_tool:station_search' %}">Login</a>
         </li>
         {% endif %}
     </ul>
   </div>
 </nav>
+{% endblock %}
+
+{% block footer %} 
+<footer>
+    <small>&copy; 2019 <a href="https://weilinxu.github.io/">Weilin Xu</a></small>
+</footer>
 {% endblock %}

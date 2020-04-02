@@ -7,7 +7,7 @@ from django.contrib import messages
 from timetable_tool.models import stations, train_records, stop_records
 from timetable_tool.execute_sql import *
 
-# TODO: false redirect method
+# TODO: active menu bar
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
