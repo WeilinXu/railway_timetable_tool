@@ -9,7 +9,6 @@ mysite/db.sqlite3
 migrations/
 
 # Distribution / packaging
-bin/
 build/
 develop-eggs/
 dist/

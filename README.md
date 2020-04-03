@@ -18,6 +18,8 @@ Refer to [DJ4E](https://www.dj4e.com/assn/dj4e_install.md) and [DJ4E_hello_world
 In `railway_timetable_tool/`:
 ```
 django-admin startproject mysite
+chmod +x ./bin/timetabledb
+chmod +x ./bin/timetablerun
 ```
 
 As mentioned in reference, change the specific lines in file `railway_timetable_tool/mysite/mysite/settings.py` and `railway_timetable_tool/mysite/mysite/wsgi.py`.
@@ -64,10 +66,18 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
+which can be simplified by (in `railway_timetable_tool`):
+```
+./bin/timetabledb reset
+```
 ## Run
 In `railway_timetable_tool/mysite/`:
 ```
 python manage.py runserver
+```
+Or in `railway_timetable_tool`:
+```
+./bin/timetablerun
 ```
 
 In browser, enter: <http://localhost:8000/timetable_tool/>

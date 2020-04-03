@@ -1,0 +1,54 @@
+#!/bin/bash
+# railwaydb
+# run commands for database
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+
+# Sanity check command line options
+usage() {
+  echo "Usage: $0 (create|destroy|reset|dump)"
+}
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+fi
+
+# Parse argument.  $1 is the first argument
+case $1 in
+  "create")
+    # mkdir -p var/uploads
+    python mysite/manage.py makemigrations
+    python mysite/manage.py migrate --run-syncdb
+    sqlite3 var/db.sqlite3 < sql/data.sql
+    # cp sql/uploads/* var/uploads/
+    echo "finish create and load database"
+    ;;
+
+  "destroy")
+    rm -rf var/db.sqlite3 
+    # rm -rf var/uploads
+    echo "finish destroy database"
+    ;;
+
+  "reset")
+    rm -rf var/db.sqlite3
+    # mkdir -p var/uploads
+    python mysite/manage.py makemigrations
+    python mysite/manage.py migrate --run-syncdb
+    sqlite3 var/db.sqlite3 < sql/data.sql
+    # cp sql/uploads/* var/uploads/
+    echo "finish reset database"
+    ;;
+
+  "dump")
+    echo "dump (not implemented yet)"
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac
+

@@ -1,0 +1,21 @@
+#!/bin/bash
+# railwayrun
+# commands to run
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+
+FILE=var/db.sqlite3
+
+if [ ! -f "$FILE" ]; then
+    echo "$FILE not exist."
+    echo "Please first load database by: ./bin/railwaydb"
+    exit 1
+fi
+ 
+export FLASK_DEBUG=True
+export FLASK_APP=railwayhistory
+export RALIWAYHISTORY_SETTINGS=config.py
+python mysite/manage.py check
+python mysite/manage.py runserver
