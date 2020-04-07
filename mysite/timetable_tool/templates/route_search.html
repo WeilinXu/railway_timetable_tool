@@ -13,12 +13,15 @@ Date <input type="date" name="date" autocomplete="off" required>
 
 <table>
     <tr>
-        <th> No. </th> <th style="text-align:center"> Station </th>
+        <th> No. </th> <th style="text-align:center"> Station </th> <th>Arrive Time</th> <th>Depart Time</th> <th>Day</th> 
     </tr>
     {% for stop in stops %}
     <tr>
         <td> {{ stop.station_no }} </td>
         <td> <a href = "{% url 'timetable_tool:station_search2' stop.station_name date_input %}">{{ stop.station_name }}</a> </td>
+        <td> {{ stop.arr_time }} </td>
+        <td> {{ stop.dep_time }} </td>
+        <td> {{ stop.arr_day }} </td>
     </tr>
     {% endfor %}
 </table>

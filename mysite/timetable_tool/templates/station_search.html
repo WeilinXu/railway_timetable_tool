@@ -13,7 +13,7 @@ Date <input type="date" name="date" autocomplete="off" required>
 
 <table>
     <tr>
-        <th>No. </th> <th>Station</th> <th>From</th> <th>To</th>
+        <th>No. </th> <th>Station</th> <th>From</th> <th>To</th> <th>Arrive Time</th> <th>Depart Time</th>
     </tr>
     {% for route in routes %}
     <tr>
@@ -21,6 +21,8 @@ Date <input type="date" name="date" autocomplete="off" required>
         <td>{{ route.station_name }} </td>
         <td>{{ route.station_from }} </td> 
         <td>{{ route.station_to}} </td>
+        <td>{{ route.dep_time}} </td>
+        <td>{{ route.arr_time}} </td>
     </tr>
     {% endfor %}
 </table>

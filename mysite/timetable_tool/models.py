@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 
-# TODO: leave primary key as default now
+# leave primary key as default now
 class stations(models.Model):   # actual name: timetable_tool_stations
     station_name = models.CharField(
             max_length=20,
@@ -27,3 +27,11 @@ class stop_records(models.Model):   # actual name: timetable_tool_stop_records
     train_record = models.ForeignKey(train_records, on_delete=models.CASCADE)
     station = models.ForeignKey(stations, on_delete=models.CASCADE) # station_id
     station_no = models.PositiveSmallIntegerField()
+    
+    arr_time = models.TimeField()
+    arr_day = models.PositiveSmallIntegerField()
+    dep_time = models.TimeField()
+    dep_day = models.PositiveSmallIntegerField()
+
+    # dist = models.PositiveSmallIntegerField(blank=True, default=None)
+

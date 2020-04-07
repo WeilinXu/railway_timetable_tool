@@ -32,7 +32,7 @@ def get_route_sql(number, fromid, toid):
 def get_stop_sql(tid, s_info, sno):
     s1 = "INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, "\
         + "arr_time, arr_day, dep_time, dep_day) " \
-        + "VALUES ({}, {}, {}, '{}', {}, '{}', {});\n".format(tid, s_info[0], sno, s_info[1], s_info[3], s_info[2], s_info[4])
+        + "VALUES ({}, {}, {}, {}, {}, {}, {});\n".format(tid, s_info[0], sno, s_info[1], s_info[3], s_info[2], s_info[4])
     return s1
 
 def count_stations(filepath_read, filepath_write):
@@ -58,50 +58,74 @@ def parse_data(filepath_read, filepath_write, station2id):
     f_write = open(filepath_write, "a+")
     lines_r = f_read.readlines()
     count = 1
-    
-    train_nums = ''
-    day_u = 0
     last_time = datetime.time(0, 0)
-    stops = []
+    day_u = 0
+    
+
     for line_r in lines_r:
         # print(line)
         if line_r == '\n':
-            if(train_nums is not ''):
-                f_write.writelines(get_route_sql(train_nums, \
-                stops[0][0], stops[-1][0]))  
-                for no1, stop1 in enumerate(stops):
-                    f_write.writelines(get_stop_sql(count, stop1, no1 + 1))
-                # reinitialize
-                count += 1
-                train_nums = ''
-                day_u = 0
-                last_time = datetime.time(0, 0)
-                stops = []
-                continue
-        
-        items = line_r[:-1].split()
-        if(len(items) is 1):
-            train_nums = items[0]
             continue
+        items = line_r[:-1].split('|')
+        train_nums = items[0].split(',')
+        stops = items[1].split(', ')
+        stop1s = []
+        stop2s_old = []
+        for stop in stops:
+            stop_info = re.split('[/(/)(/)]',stop)
+            station_id = station2id[stop_info[0]]
+            stop_dir = stop_info[1]
+            arrive_time1 = datetime.datetime.strptime(stop_info[2], '%H:%M').time()
+            depart_time1 = datetime.datetime.strptime(stop_info[3], '%H:%M').time()
+            arrive_time2 = datetime.datetime.strptime(stop_info[5], '%H:%M').time()
+            depart_time2 = datetime.datetime.strptime(stop_info[6], '%H:%M').time()
+            if(stop_dir != 'u'):
+                temp = [station_id, arrive_time1, depart_time1]
+                # day convention for up direction
+                if(arrive_time1 < last_time):
+                    day_u += 1
+                temp.append(day_u)
+                last_time = arrive_time1
+                if(depart_time1 < last_time):
+                    day_u += 1
+                temp.append(day_u)
+                last_time = depart_time1
+                stop1s.append(temp)
+
+            if(stop_dir != 'd'):
+                temp = [station_id, arrive_time2, depart_time2]
+                stop2s_old.append(temp)
         
-        if(len(items) is 4):
-            stop_name = items[0]+ ' ' + items[1]
-        else:
-            stop_name = items[0]
-        arrive_time = datetime.datetime.strptime(items[-2], '%H:%M').time()
-        depart_time = datetime.datetime.strptime(items[-1], '%H:%M').time()
-        temp = [station2id[stop_name], arrive_time, depart_time]
-        # day convention
-        if(arrive_time < last_time):
-            day_u += 1
-        temp.append(day_u)
-        last_time = arrive_time
-        if(depart_time < last_time):
-            day_u += 1
-        temp.append(day_u)
-        last_time = depart_time
-        stops.append(temp)
-    
+        stop2s_old = stop2s_old[::-1]
+        # day convention for down direction
+        last_time = datetime.time(0, 0)
+        day_d = 0
+        stop2s = []
+        for stop_record in stop2s_old:
+            temp = [stop_record[0], stop_record[1], stop_record[2]]
+            if(stop_record[1] < last_time):
+                day_d += 1
+            temp.append(day_d)
+            last_time = stop_record[1]
+            if(stop_record[2] < last_time):
+                day_d += 1
+            temp.append(day_d)
+            last_time = stop_record[2]
+            stop2s.append(temp)
+
+        f_write.writelines(get_route_sql(train_nums[0], \
+                stop1s[0][0], stop1s[-1][0]))  
+        for no1, stop1 in enumerate(stop1s):
+            f_write.writelines(get_stop_sql(count, stop1, no1 + 1))
+        count += 1
+        
+
+        f_write.writelines(get_route_sql(train_nums[1], \
+                stop2s[0][0], stop2s[-1][0])) 
+        for no2, stop2 in enumerate(stop2s):
+            f_write.writelines(get_stop_sql(count, stop2, no2 + 1))
+        count += 1
+
     f_write.close()
     f_read.close()
 

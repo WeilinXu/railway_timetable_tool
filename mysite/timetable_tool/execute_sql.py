@@ -36,7 +36,9 @@ def valid_date(date_in):
 # TODO: date
 def get_route_query(route_in, date_in):
     route_query = "SELECT S.id AS station_id, S.station_name AS station_name, " \
-                        + "T.id AS train_record_id, TR.station_no AS station_no " \
+                        + "T.id AS train_record_id, TR.station_no AS station_no, " \
+                        + "TR.arr_time AS arr_time, TR.arr_day AS arr_day, " \
+                        + "TR.dep_time AS dep_time " \
                     + "FROM timetable_tool_stations S, timetable_tool_train_records T, timetable_tool_stop_records TR " \
                     + "WHERE T.id = TR.train_record_id AND S.id = TR.station_id "\
                         + "AND T.train_number = %s "  \
@@ -49,7 +51,9 @@ def get_route_query(route_in, date_in):
 def get_station_query(station_in, date_in):
     station_query = "SELECT S.id AS station_id, S.station_name AS station_name," \
                         + "T.id AS train_record_id, T.train_number as train_number," \
-                    + "S1.station_name AS station_from, S2.station_name AS station_to " \
+                    + "S1.station_name AS station_from, S2.station_name AS station_to, " \
+                    + "TR.arr_time AS arr_time, " \
+                    + "TR.dep_time AS dep_time " \
                     + "FROM timetable_tool_stations S, timetable_tool_train_records T, " \
                     + "timetable_tool_stop_records TR, timetable_tool_stations S1, timetable_tool_stations S2 " \
                     + "WHERE S.station_name = %s " \
@@ -65,7 +69,9 @@ def get_train_query(depart_in, dest_in, date_in):
     train_query = "SELECT Sfrom.station_name AS station_depart, Sto.station_name AS station_dest," \
                         + "Sfrom.id AS station_depart_id, Sto.id AS station_dest_id," \
                         + "T.id AS train_record_id, T.train_number AS train_number," \
-                        + "S1.station_name AS station_from, S2.station_name AS station_to " \
+                        + "S1.station_name AS station_from, S2.station_name AS station_to, " \
+                        + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, " \
+                        + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day " \
                     + "FROM timetable_tool_stations Sfrom, timetable_tool_stations Sto, timetable_tool_stop_records TRfrom, " \
                         + "timetable_tool_stop_records TRto, timetable_tool_train_records T, " \
                         + "timetable_tool_stations S1, timetable_tool_stations S2 " \
@@ -79,4 +85,13 @@ def get_train_query(depart_in, dest_in, date_in):
     train_results = query_db(train_query, [depart_in, dest_in])
     for train_result in train_results:
         train_result["train_link"] = replace_from_dash(train_result["train_number"])
+        delta_day = train_result["arr_day"] - train_result["dep_day"]
+        if(delta_day == 0):
+            train_result["day_str"] = ""
+        elif(delta_day == 1):
+            train_result["day_str"] = "On 2nd day"
+        elif(delta_day == 2):
+            train_result["day_str"] = "On 3rd day"
+        else:
+            train_result["day_str"] = "On " + str(delta_day) + "th day"
     return train_results
