@@ -20,12 +20,15 @@
         {% url 'timetable_tool:station_search' as ss %}
         <li {% if request.get_full_path == ss %}class="active"{% endif %}>
             <a href="{% url 'timetable_tool:station_search'  %}">Station Search</a></li>
+        {% if user.is_authenticated %}
+            
+        {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
-        <li>
-            <a href="/timetable_tool">Timetable Tool</a>
-        </li>
+        {% url 'timetable_tool:ticket_all' as ta %}
+        <li {% if request.get_full_path == ta %}class="active"{% endif %}>
+            <a href="{% url 'timetable_tool:ticket_all'  %}">My Tickets</a></li>
         <li class="dropdown">
             <a href="#" data-toggle="dropdown" class="dropdown-toggle">
                 <img style="width: 25px;" src="{{ user|gravatar:60 }}"/><b class="caret"></b>

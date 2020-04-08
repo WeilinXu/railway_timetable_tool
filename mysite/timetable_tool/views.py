@@ -17,8 +17,7 @@ from timetable_tool.execute_sql import *
 # TODO: unclear search
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
-
+    return render(request, "index.html")
 
 def route_search(request, route_input = None, date_input = None):
     if request.method == 'POST':
@@ -71,14 +70,9 @@ def train_search(request, depart_input = None, dest_input = None, date_input = N
     
     return render(request, "train_search.html", context)
 
-class UserView(LoginRequiredMixin, View):
-    template = 'customer_menu.html'
-    def get(self, request):
-        context = {}
-        return render(request, self.template, context)
 
 class TicketListView(LoginRequiredMixin, View):
-    template = 'customer_menu.html'  # 'order_system.html'
+    template = 'ticket_list.html'  # 'order_system.html'
     def get(self,request):
         context = {}
         return render(request, self.template, context=context)
@@ -92,7 +86,7 @@ class TicketListView(LoginRequiredMixin, View):
 
 
 class TicketBuyView(LoginRequiredMixin, View):
-    template = 'timetable_tool_form.html'
+    template = 'ticket_buy.html'
     success_url = reverse_lazy('ads:all')   # TODO: success url
     
     def get(self, request, pk_from, pk_to, pk_date) :
