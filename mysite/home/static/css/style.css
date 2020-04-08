@@ -4,7 +4,7 @@ body {
     font-size: 14px;
     font-family: Helvetica, Arial, sans-serif;
 }
-
+/*
 .avatar {
     width: 40px;
 }
@@ -43,6 +43,7 @@ nav li a:hover {
     border-color: #b8daff;
     border-radius: 5px;
 }
+*/
 table{
     table-layout: fixed; 
     width: 100%;
@@ -96,7 +97,7 @@ input[name=year] {
     border: 1px solid #555555;
     border-radius: 5px;
 }
-
+/*
 .btn:hover {
     text-decoration: none;
     background-color: black;
@@ -147,7 +148,7 @@ input[name=year] {
     margin: 0 auto;
     height: 100px;
 }
-
+*/
 footer {
     color: #888;
     margin-top: 15px;

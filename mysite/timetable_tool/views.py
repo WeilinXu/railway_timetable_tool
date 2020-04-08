@@ -127,8 +127,8 @@ class TicketBuyView(LoginRequiredMixin, View):
                 # update tickets avaliable
                 tickets_all.tickets_avaliable -= int(request.POST['quantity'])
                 tickets_all.save()
-            
-        return redirect(reverse_lazy('timetable_tool:ticket_all')) 
+                return redirect(reverse_lazy('timetable_tool:ticket_all'))
+        return redirect(reverse_lazy('timetable_tool:train_search'))
 
 
 
