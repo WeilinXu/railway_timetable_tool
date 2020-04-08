@@ -1,0 +1,37 @@
+{% extends "base_menu.html" %}
+
+{% block content %}
+<h3> My Tickets </h3> 
+<form action="" method="post">{% csrf_token %}
+    <input class="btn" type="submit" name="submit" value="find">
+</form>
+
+<table>
+    <tr> 
+        <th> Ticket No. </th> <th>Trian No. </th> <th> Departure </th> <th> Arrival </th>
+        <th> Operation </th>
+    </tr>
+    {% for ticket in tickets %}
+    <tr>
+        <td>{{ ticket.ticket_id }} </td>
+        <td> <a href="{% url 'timetable_tool:route_search2' ticket.train_link ticket.train_date_str %}">{{ticket.train_number }}</a> </td>
+        <td>
+            <p>
+                {{ ticket.station_from }} <br>
+                {{ ticket.dep_datetime}}
+            </p>
+        </td>
+        <td>
+            <p>
+                {{ ticket.station_to }} <br>
+                {{ ticket.arr_datetime}}
+            </p>
+        </td>
+        <td>
+            <a href="{% url 'timetable_tool:ticket_cancel' ticket.ticket_id %}" class="btn btn-secondary">Cancel Ticket</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

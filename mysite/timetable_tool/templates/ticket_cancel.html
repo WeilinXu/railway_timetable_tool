@@ -1,0 +1,9 @@
+{% extends "base_menu.html" %}
+
+{% block content %}
+<form action="" method="post">{% csrf_token %}
+    <p>Are you sure you want to cancel ticket?</p>
+    <input type="submit" value="Confirm" />
+    <input type="submit" name="cancel" value="Cancel" /> 
+</form>
+{% endblock %}

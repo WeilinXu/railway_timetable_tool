@@ -71,7 +71,8 @@ def get_train_query(depart_in, dest_in, date_in):
                         + "T.id AS train_record_id, T.train_number AS train_number," \
                         + "S1.station_name AS station_from, S2.station_name AS station_to, " \
                         + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, " \
-                        + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day " \
+                        + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
+                        + "TRto.id AS TRto_id, TRfrom.id AS TRfrom_id " \
                     + "FROM timetable_tool_stations Sfrom, timetable_tool_stations Sto, timetable_tool_stop_records TRfrom, " \
                         + "timetable_tool_stop_records TRto, timetable_tool_train_records T, " \
                         + "timetable_tool_stations S1, timetable_tool_stations S2 " \
@@ -94,4 +95,36 @@ def get_train_query(depart_in, dest_in, date_in):
             train_result["day_str"] = "On 3rd day"
         else:
             train_result["day_str"] = "On " + str(delta_day) + "th day"
+        cur_day = datetime.datetime.strptime(date_in, '%Y-%m-%d')
+        t2 = datetime.datetime.combine(cur_day + datetime.timedelta(days = delta_day), train_result["arr_time"])
+        t1 = datetime.datetime.combine(cur_day, train_result["dep_time"])
+        train_result['time_delta'] = t2 - t1 
     return train_results
+
+
+def get_ticket_bought(user_id_in):
+    ticket_query = "SELECT TKS.id AS ticket_id, TK.train_date AS train_date, " \
+                    + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, "\
+                    + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
+                    + "S1.station_name AS station_from, S2.station_name AS station_to, "\
+                    + "T.train_number AS train_number "\
+                    + "FROM timetable_tool_tickets_sold AS TKS, timetable_tool_tickets AS TK, "\
+                    + "timetable_tool_stop_records AS TRfrom, timetable_tool_stop_records AS TRto, "\
+                    + "timetable_tool_stations S1, timetable_tool_stations S2, "\
+                    + "timetable_tool_train_records T " \
+                    + "WHERE TKS.customer_id = {} AND TKS.ticket_id = TK.id "\
+                    + "AND TK.stop_from_id = TRfrom.id AND TK.stop_to_id = TRto.id "\
+                    + "AND TRfrom.station_id = S1.id AND TRto.station_id = S2.id "\
+                    + "AND TRfrom.train_record_id = T.id " \
+                    + "ORDER BY TK.train_date DESC"
+    
+    ticket_results = query_db(ticket_query.format(user_id_in), [])
+    for ticket_result in ticket_results:
+        delta_day = ticket_result["arr_day"] - ticket_result["dep_day"]
+        cur_day = ticket_result["train_date"]
+        ticket_result["train_link"] = replace_from_dash(ticket_result["train_number"])
+        ticket_result["train_date_str"] = str(ticket_result["train_date"])
+        ticket_result["dep_datetime"] = datetime.datetime.combine(cur_day, ticket_result["dep_time"])
+        ticket_result["arr_datetime"] = datetime.datetime.combine(cur_day + datetime.timedelta(days = delta_day), ticket_result["arr_time"])
+    
+    return ticket_results

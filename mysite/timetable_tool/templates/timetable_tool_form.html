@@ -1,0 +1,11 @@
+{% extends "base_menu.html" %}
+
+{% block content %}
+<h3> Ticket Book </h3> 
+<form method="post">
+    {% csrf_token %}
+    Quantity <input type="number" min="1" step="1" name="quantity" autocomplete="off" required>
+    <input class="btn" type="submit" name="submit" value="Book">
+    <a href="{% url 'timetable_tool:train_search' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

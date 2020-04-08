@@ -35,6 +35,11 @@ def get_stop_sql(tid, s_info, sno):
         + "VALUES ({}, {}, {}, '{}', {}, '{}', {});\n".format(tid, s_info[0], sno, s_info[1], s_info[3], s_info[2], s_info[4])
     return s1
 
+def get_ticket_sql(tr_id1, tr_id2, ticket_date = '2020-05-05', tickets_avaliable = 5):
+    s1 = "INSERT INTO timetable_tool_tickets (stop_from_id, stop_to_id, train_date, "\
+        + "tickets_avaliable) VALUES ({}, {}, '{}', {});\n".format(tr_id1, tr_id2, ticket_date, tickets_avaliable)
+    return s1
+
 def count_stations(filepath_read, filepath_write):
     station2id = {}
     f_read = open(filepath_read, 'r')
@@ -57,8 +62,8 @@ def parse_data(filepath_read, filepath_write, station2id):
     f_read = open(filepath_read, 'r')
     f_write = open(filepath_write, "a+")
     lines_r = f_read.readlines()
-    count = 1
-    
+    route_count = 1
+    tr_count = 1
     train_nums = ''
     day_u = 0
     last_time = datetime.time(0, 0)
@@ -69,10 +74,15 @@ def parse_data(filepath_read, filepath_write, station2id):
             if(train_nums is not ''):
                 f_write.writelines(get_route_sql(train_nums, \
                 stops[0][0], stops[-1][0]))  
+                
                 for no1, stop1 in enumerate(stops):
-                    f_write.writelines(get_stop_sql(count, stop1, no1 + 1))
+                    f_write.writelines(get_stop_sql(route_count, stop1, no1 + 1))
+                
+                tr_new = tr_count + len(stops)
+                f_write.writelines(get_ticket_sql(tr_count, tr_new - 1))
+                tr_count = tr_new
                 # reinitialize
-                count += 1
+                route_count += 1
                 train_nums = ''
                 day_u = 0
                 last_time = datetime.time(0, 0)

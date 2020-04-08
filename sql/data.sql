@@ -24,6 +24,7 @@ INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (1, 5, 6, '19:31:00', 0, '19:43:00', 0);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (1, 7, 7, '21:35:00', 0, '21:38:00', 0);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (1, 8, 8, '21:54:00', 0, '21:54:00', 0);
+INSERT INTO timetable_tool_tickets (stop_from_id, stop_to_id, train_date, tickets_avaliable) VALUES (1, 8, '2020-05-05', 5);
 INSERT INTO timetable_tool_train_records (train_number, train_from_id, train_to_id) VALUES ('K264', 8, 1);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (2, 8, 1, '20:05:00', 0, '20:05:00', 0);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (2, 7, 2, '20:20:00', 0, '20:24:00', 0);
@@ -33,6 +34,7 @@ INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (2, 3, 6, '01:46:00', 1, '01:57:00', 1);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (2, 2, 7, '04:27:00', 1, '04:38:00', 1);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (2, 1, 8, '08:21:00', 1, '08:21:00', 1);
+INSERT INTO timetable_tool_tickets (stop_from_id, stop_to_id, train_date, tickets_avaliable) VALUES (9, 16, '2020-05-05', 5);
 INSERT INTO timetable_tool_train_records (train_number, train_from_id, train_to_id) VALUES ('K89', 17, 5);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (3, 17, 1, '22:17:00', 0, '22:17:00', 0);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (3, 2, 2, '01:32:00', 1, '01:39:00', 1);
@@ -40,6 +42,7 @@ INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (3, 4, 4, '06:04:00', 1, '06:10:00', 1);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (3, 6, 5, '07:33:00', 1, '07:41:00', 1);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (3, 5, 6, '07:57:00', 1, '07:57:00', 1);
+INSERT INTO timetable_tool_tickets (stop_from_id, stop_to_id, train_date, tickets_avaliable) VALUES (17, 22, '2020-05-05', 5);
 INSERT INTO timetable_tool_train_records (train_number, train_from_id, train_to_id) VALUES ('K90', 5, 17);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (4, 5, 1, '21:42:00', 0, '21:42:00', 0);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (4, 6, 2, '21:54:00', 0, '22:00:00', 0);
@@ -47,3 +50,4 @@ INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (4, 3, 4, '01:25:00', 1, '01:39:00', 1);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (4, 2, 5, '04:00:00', 1, '04:11:00', 1);
 INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, arr_time, arr_day, dep_time, dep_day) VALUES (4, 17, 6, '07:30:00', 1, '07:30:00', 1);
+INSERT INTO timetable_tool_tickets (stop_from_id, stop_to_id, train_date, tickets_avaliable) VALUES (23, 28, '2020-05-05', 5);

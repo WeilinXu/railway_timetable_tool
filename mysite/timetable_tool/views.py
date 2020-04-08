@@ -1,13 +1,20 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib import messages
+from django.views import View
 
-from timetable_tool.models import stations, train_records, stop_records
+
+from timetable_tool.models import stations, train_records, stop_records, tickets, tickets_sold
+from timetable_tool.forms import CreateForm
 from timetable_tool.execute_sql import *
 
 # TODO: active menu bar
+# TODO: auto complete
+# TODO: unclear search
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -63,3 +70,101 @@ def train_search(request, depart_input = None, dest_input = None, date_input = N
             context = {"depart_input": depart_input, "dest_input": dest_input, "date_input": date_input, "trains": trains}
     
     return render(request, "train_search.html", context)
+
+class UserView(LoginRequiredMixin, View):
+    template = 'customer_menu.html'
+    def get(self, request):
+        context = {}
+        return render(request, self.template, context)
+
+class TicketListView(LoginRequiredMixin, View):
+    template = 'customer_menu.html'  # 'order_system.html'
+    def get(self,request):
+        context = {}
+        return render(request, self.template, context=context)
+    
+    def post(self, request):
+        context = {}
+        if request.POST.get('submit') == 'find':
+            user_tickets = get_ticket_bought(self.request.user.id)
+            context = {"tickets": user_tickets}
+        return render(request, self.template, context=context)
+
+
+class TicketBuyView(LoginRequiredMixin, View):
+    template = 'timetable_tool_form.html'
+    success_url = reverse_lazy('ads:all')   # TODO: success url
+    
+    def get(self, request, pk_from, pk_to, pk_date) :
+        form = CreateForm()
+        ctx = { 'form': form }
+        return render(request, self.template, ctx)
+
+    def post(self, request, pk_from, pk_to, pk_date) :
+        form = CreateForm(request.POST)
+        '''
+        if not form.is_valid() :
+            print("Form not valid!")
+            messages.error(request, "Form not valid!")
+            return render(request, self.template, ctx)
+        '''
+        ctx = {'form' : form}
+            
+        
+        if not tickets.objects.filter(stop_from_id = pk_from, \
+                    stop_to_id = pk_to, train_date = pk_date): 
+            messages.error(request, "No tickets are sold!")
+        else:
+            tickets_all = tickets.objects.get(stop_from_id = pk_from, \
+                    stop_to_id = pk_to, train_date = pk_date)
+            if tickets_sold.objects.filter(ticket_id = tickets_all.id, \
+                    customer_id = self.request.user.id):
+                messages.error(request, "You have bought this ticket!")
+            elif(int(request.POST['quantity']) > tickets_all.tickets_avaliable):
+                messages.error(request, "Tickets are not enough!")
+            else:
+                messages.success(request, "Success!")
+                # Add owner to the model before saving
+                ticket_sold = form.save(commit=False)
+                ticket_sold.customer = self.request.user
+                ticket_sold.ticket_id = tickets_all.id
+                ticket_sold.seat_number = tickets_all.tickets_avaliable
+                ticket_sold.save()
+                # update tickets avaliable
+                tickets_all.tickets_avaliable -= int(request.POST['quantity'])
+                tickets_all.save()
+            
+        return redirect(reverse_lazy('timetable_tool:ticket_all')) 
+
+
+
+            
+
+class TicketCancelView(LoginRequiredMixin, View):
+    template = "ticket_cancel.html"
+    def get(self, request, pk_tks):
+        context = {}
+        return render(request, self.template, context)
+    
+    def post(self, request, pk_tks):
+        if "cancel" in request.POST:
+            messages.info(request, "Ticket isn't cancelled!")
+            return redirect(reverse_lazy('timetable_tool:ticket_all'))
+        if not tickets_sold.objects.filter(id = pk_tks, \
+            customer_id = self.request.user.id):
+            messages.error(request, "Ticket doesn't exist!")
+        else:
+            ticket_cancel = tickets_sold.objects.get(id = pk_tks, \
+                        customer_id = self.request.user.id)
+            print(ticket_cancel.ticket_id)
+            if not tickets.objects.filter(id = ticket_cancel.ticket_id):
+                messages.error(request, "Ticket doesn't exist!")
+            else:
+                tickets_all = tickets.objects.get(id = ticket_cancel.ticket_id)
+                tickets_all.tickets_avaliable += ticket_cancel.quantity
+                tickets_all.save()
+                ticket_cancel.delete()
+                messages.success(request, "Ticket is cancelled successfully!")
+
+        return redirect(reverse_lazy('timetable_tool:ticket_all'))
+            

@@ -1,5 +1,8 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
+from django.contrib.auth.models import User
+from django.conf import settings
+
 
 # leave primary key as default now
 class stations(models.Model):   # actual name: timetable_tool_stations
@@ -34,4 +37,28 @@ class stop_records(models.Model):   # actual name: timetable_tool_stop_records
     dep_day = models.PositiveSmallIntegerField()
 
     # dist = models.PositiveSmallIntegerField(blank=True, default=None)
+
+class tickets(models.Model):
+    class Meta:
+        unique_together = (('stop_from_id', 'stop_to_id', 'train_date'),)
+    stop_from = models.ForeignKey(stop_records, related_name="sr1", on_delete=models.CASCADE)
+    stop_to = models.ForeignKey(stop_records, related_name="sr2", on_delete=models.CASCADE)
+    train_date = models.DateField()
+    tickets_avaliable = models.PositiveSmallIntegerField()
+
+'''
+# TODO: allow one customer to buy tickets for others
+class customers(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # name = models.CharField(max_length=100)
+'''
+
+class tickets_sold(models.Model):
+    class Meta:
+        unique_together = (('ticket_id', 'customer_id'),)
+    ticket = models.ForeignKey(tickets, on_delete=models.CASCADE)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    seat_number = models.PositiveSmallIntegerField()
+    quantity = models.PositiveSmallIntegerField(default=1)
+
 
