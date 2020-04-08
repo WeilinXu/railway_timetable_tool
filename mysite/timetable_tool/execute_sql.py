@@ -1,5 +1,6 @@
 from django.db import connection, transaction
 import datetime
+from timetable_tool.models import tickets
 
 def query_db(query, args=(), one=False, commit=False):
     cursor = connection.cursor()
@@ -65,6 +66,9 @@ def get_station_query(station_in, date_in):
         station_result["train_link"] = replace_from_dash(station_result["train_number"])
     return station_results
 
+# [station_depart, station_dest, station_depart_id, station_dest_id, train_record_id, station_to
+#  station_from, station_to, dep_time, dep_day, arr_time, arr_day, TRto_id, TRfrom_id,
+# train_link, day_str, time_delta]
 def get_train_query(depart_in, dest_in, date_in):
     train_query = "SELECT Sfrom.station_name AS station_depart, Sto.station_name AS station_dest," \
                         + "Sfrom.id AS station_depart_id, Sto.id AS station_dest_id," \
@@ -99,7 +103,16 @@ def get_train_query(depart_in, dest_in, date_in):
         t2 = datetime.datetime.combine(cur_day + datetime.timedelta(days = delta_day), train_result["arr_time"])
         t1 = datetime.datetime.combine(cur_day, train_result["dep_time"])
         train_result['time_delta'] = t2 - t1 
+        # seat avaliable search
+        if tickets.objects.filter(stop_from_id = train_result["TRfrom_id"], \
+                stop_to_id = train_result["TRto_id"], train_date = date_in): 
+            tickets_all = tickets.objects.get(stop_from_id = train_result["TRfrom_id"], \
+                stop_to_id = train_result["TRto_id"], train_date = date_in)
+            train_result["seats_avaliable"] = tickets_all.tickets_avaliable
+        else:
+            train_result["seats_avaliable"] = 0
     return train_results
+
 
 
 def get_ticket_bought(user_id_in):
@@ -117,7 +130,6 @@ def get_ticket_bought(user_id_in):
                     + "AND TRfrom.station_id = S1.id AND TRto.station_id = S2.id "\
                     + "AND TRfrom.train_record_id = T.id " \
                     + "ORDER BY TK.train_date DESC"
-    
     ticket_results = query_db(ticket_query.format(user_id_in), [])
     for ticket_result in ticket_results:
         delta_day = ticket_result["arr_day"] - ticket_result["dep_day"]
@@ -126,5 +138,5 @@ def get_ticket_bought(user_id_in):
         ticket_result["train_date_str"] = str(ticket_result["train_date"])
         ticket_result["dep_datetime"] = datetime.datetime.combine(cur_day, ticket_result["dep_time"])
         ticket_result["arr_datetime"] = datetime.datetime.combine(cur_day + datetime.timedelta(days = delta_day), ticket_result["arr_time"])
-    
+        
     return ticket_results

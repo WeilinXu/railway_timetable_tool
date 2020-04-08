@@ -78,10 +78,10 @@ class TicketListView(LoginRequiredMixin, View):
         return render(request, self.template, context=context)
     
     def post(self, request):
-        context = {}
-        if request.POST.get('submit') == 'find':
-            user_tickets = get_ticket_bought(self.request.user.id)
-            context = {"tickets": user_tickets}
+        # context = {}
+        #if request.POST.get('submit') == 'submit':
+        user_tickets = get_ticket_bought(self.request.user.id)
+        context = {"tickets": user_tickets}
         return render(request, self.template, context=context)
 
 

@@ -34,7 +34,8 @@ case $1 in
     ;;
 
   "reset")
-    rm -rf var/db.sqlite3
+    # rm -rf var/db.sqlite3
+    sqlite3 var/db.sqlite3 < sql/drop_table.sql
     # mkdir -p var/uploads
     python mysite/manage.py makemigrations
     python mysite/manage.py migrate --run-syncdb

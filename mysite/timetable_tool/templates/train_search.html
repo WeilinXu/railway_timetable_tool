@@ -15,7 +15,8 @@ Date <input type="date" name="date" autocomplete="off" required>
 <table>
     <tr> 
         <th> No. </th> <th>Depart.</th> <th>Dest.</th> <th> From </th> <th> To </th> 
-         <th>Arrive Time</th> <th>Depart Time</th> <th> Time Length </th> <th>  </th>
+         <th>Arrive Time</th> <th>Depart Time</th> <th> Time Length </th> 
+         <th> Seats </th> <th>  </th>
     </tr>
     {% for train in trains %}
     <tr>
@@ -28,6 +29,7 @@ Date <input type="date" name="date" autocomplete="off" required>
         <td>{{ train.dep_time}} </td>
         <td>{{ train.arr_time}} {{train.day_str}}</td>
         <td> {{train.time_delta}} </td>
+        <td> {{train.seats_avaliable}} </td>
         <td>
             <a href="{% url 'timetable_tool:ticket_buy' train.TRfrom_id train.TRto_id date_input%}" class="btn btn-secondary">Buy Ticket</a>
         </td>
