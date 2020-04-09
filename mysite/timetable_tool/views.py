@@ -113,6 +113,12 @@ class TicketListView(LoginRequiredMixin, View):
         # context = {}
         #if request.POST.get('submit') == 'submit':
         user_tickets = get_ticket_bought(self.request.user.id)
+        request.session['my_tickets'] = {}
+        for user_ticket in user_tickets:
+            request.session['my_tickets'][user_ticket["ticket_id"]] = \
+                    {"station_from": user_ticket["station_from"], \
+                    "train_number": user_ticket["train_number"], \
+                    "depart_date": str(user_ticket["train_date"])}
         context = {"tickets": user_tickets}
         return render(request, self.template, context=context)
 
@@ -170,7 +176,9 @@ class TicketBuyView(LoginRequiredMixin, View):
 class TicketCancelView(LoginRequiredMixin, View):
     template = "ticket_cancel.html"
     def get(self, request, pk_tks):
-        context = {}
+        if str(pk_tks) in request.session['my_tickets']:
+            temp_data = request.session['my_tickets'][str(pk_tks)]
+            context = {"ticket_info": temp_data}
         return render(request, self.template, context)
     
     def post(self, request, pk_tks):

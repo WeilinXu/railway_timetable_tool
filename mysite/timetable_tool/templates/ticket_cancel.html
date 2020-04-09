@@ -2,7 +2,12 @@
 
 {% block content %}
 <form action="" method="post">{% csrf_token %}
-    <p>Are you sure you want to cancel ticket?</p>
+    <p>
+        Are you sure you want to cancel ticket of 
+        Train <span style="font-weight:bold">{{ticket_info.train_number}}</span><br>
+        from <span style="font-weight:bold">{{ticket_info.station_from}}</span><br>
+        on <span style="font-weight:bold">{{ticket_info.depart_date}}</span>?
+    </p>
     <input type="submit" value="Confirm" />
     <input type="submit" name="cancel" value="Cancel" /> 
 </form>
