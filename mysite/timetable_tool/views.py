@@ -9,10 +9,11 @@ from django.views import View
 
 
 from timetable_tool.models import stations, train_records, stop_records, tickets, tickets_sold
-from timetable_tool.forms import CreateForm, RouteForm, StationForm, TrainForm
-from timetable_tool.execute_sql import *
+from timetable_tool.forms import BuyForm, RouteForm, StationForm, TrainForm
+from timetable_tool.utils import *
 
 # TODO: active menu bar
+# TODO: solve menu dropdown issue in Chrome
 # TODO: auto complete
 # TODO: unclear search
 
@@ -119,12 +120,12 @@ class TicketBuyView(LoginRequiredMixin, View):
     template = 'ticket_buy.html'
     
     def get(self, request, pk_from, pk_to, pk_date) :
-        form = CreateForm()
+        form = BuyForm()
         ctx = { 'form': form }
         return render(request, self.template, ctx)
 
     def post(self, request, pk_from, pk_to, pk_date) :
-        form = CreateForm(request.POST)
+        form = BuyForm(request.POST)
         '''
         if not form.is_valid() :
             print("Form not valid!")

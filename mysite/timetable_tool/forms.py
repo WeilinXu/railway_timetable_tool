@@ -8,7 +8,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core import validators
 
-class CreateForm(forms.ModelForm):
+class BuyForm(forms.ModelForm):
     class Meta:
         model = tickets_sold
         fields = ['quantity']  # Picture is manual
