@@ -1,6 +1,6 @@
 from django.db import connection, transaction
 import datetime
-from timetable_tool.models import tickets
+from timetable_tool.models import tickets, stations, train_records, stop_records
 
 def query_db(query, args=(), one=False, commit=False):
     cursor = connection.cursor()
@@ -87,9 +87,10 @@ def get_train_query(depart_in, dest_in, date_in):
                         + "AND T.train_from_id = S1.id AND T.train_to_id = S2.id " \
                     + "ORDER BY T.train_number"
     train_results = query_db(train_query, [depart_in, dest_in])
+    cur_day = datetime.datetime.strptime(date_in, '%Y-%m-%d')
     for train_result in train_results:
         train_result["train_link"] = replace_from_dash(train_result["train_number"])
-        delta_day = train_result["arr_day"] - train_result["dep_day"]
+        arr_date, delta_day = get_arr_date(train_result["dep_day"], cur_day, train_result["arr_day"])
         if(delta_day == 0):
             train_result["day_str"] = ""
         elif(delta_day == 1):
@@ -98,8 +99,8 @@ def get_train_query(depart_in, dest_in, date_in):
             train_result["day_str"] = "On 3rd day"
         else:
             train_result["day_str"] = "On " + str(delta_day) + "th day"
-        cur_day = datetime.datetime.strptime(date_in, '%Y-%m-%d')
-        t2 = datetime.datetime.combine(cur_day + datetime.timedelta(days = delta_day), train_result["arr_time"])
+        
+        t2 = datetime.datetime.combine(arr_date, train_result["arr_time"])
         t1 = datetime.datetime.combine(cur_day, train_result["dep_time"])
         train_result['time_delta'] = t2 - t1 
         # seat avaliable search
@@ -131,11 +132,34 @@ def get_ticket_bought(user_id_in):
                     + "ORDER BY TK.train_date DESC"
     ticket_results = query_db(ticket_query.format(user_id_in), [])
     for ticket_result in ticket_results:
-        delta_day = ticket_result["arr_day"] - ticket_result["dep_day"]
         cur_day = ticket_result["train_date"]
+        arr_date, _ = get_arr_date(ticket_result["dep_day"], cur_day, ticket_result["arr_day"])
         ticket_result["train_link"] = replace_from_dash(ticket_result["train_number"])
         ticket_result["train_date_str"] = str(ticket_result["train_date"])
         ticket_result["dep_datetime"] = datetime.datetime.combine(cur_day, ticket_result["dep_time"])
-        ticket_result["arr_datetime"] = datetime.datetime.combine(cur_day + datetime.timedelta(days = delta_day), ticket_result["arr_time"])
+        ticket_result["arr_datetime"] = datetime.datetime.combine(arr_date, ticket_result["arr_time"])
         
     return ticket_results
+
+def get_stop_record_info(stop_record_id_in, is_arr = False):
+    stop_record_obj = stop_records.objects.get(id =  stop_record_id_in)
+    stop_info = {}
+    if(is_arr):
+        stop_info['stop_time'] = stop_record_obj.arr_time
+        stop_info['stop_day'] = stop_record_obj.arr_day
+    else:
+        stop_info['stop_time'] = stop_record_obj.dep_time
+        stop_info['stop_day'] = stop_record_obj.dep_day
+    
+    route_obj = train_records.objects.get(id =  stop_record_obj.train_record_id)
+    station_obj = stations.objects.get(id =  stop_record_obj.station_id)
+    stop_info['station_name'] = station_obj.station_name
+    stop_info['train_number'] = route_obj.train_number
+    return stop_info
+
+def get_arr_date(dep_day_in, dep_date_in, arr_day_in):
+    delta_day =  arr_day_in - dep_day_in
+    return dep_date_in + datetime.timedelta(days = delta_day), delta_day
+
+
+

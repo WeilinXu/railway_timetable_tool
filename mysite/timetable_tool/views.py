@@ -14,6 +14,7 @@ from timetable_tool.utils import *
 
 # TODO: active menu bar
 # TODO: solve menu dropdown issue in Chrome
+# TODO: comfirm buy and cancel page with more information
 # TODO: auto complete
 # TODO: unclear search
 
@@ -119,9 +120,14 @@ class TicketListView(LoginRequiredMixin, View):
 class TicketBuyView(LoginRequiredMixin, View):
     template = 'ticket_buy.html'
     
-    def get(self, request, pk_from, pk_to, pk_date) :
+    def get(self, request, pk_from, pk_to, pk_date):
+        dep_info = get_stop_record_info(pk_from, is_arr = False)
+        arr_info = get_stop_record_info(pk_to, is_arr = True)
+        dep_date = datetime.datetime.strptime(pk_date, '%Y-%m-%d')
+        arr_date, _ = get_arr_date(dep_info['stop_day'], dep_date, arr_info['stop_day'])
         form = BuyForm()
-        ctx = { 'form': form }
+        ctx = { 'form': form, 'dep_info': dep_info, 'dep_date': dep_date, \
+                'arr_info': arr_info, 'arr_date': arr_date}
         return render(request, self.template, ctx)
 
     def post(self, request, pk_from, pk_to, pk_date) :

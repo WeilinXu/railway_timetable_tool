@@ -2,6 +2,12 @@
 
 {% block content %}
 <h3> Ticket Book </h3> 
+<span style="font-weight:bold">{{dep_info.train_number}}</span><br>
+Depart from <span style="font-weight:bold">{{dep_info.station_name}}</span> on <span style="font-weight:bold">{{dep_date}}</span> 
+<span style="font-weight:bold">{{dep_info.stop_time}}</span> <br>
+Arrive at <span style="font-weight:bold">{{arr_info.station_name}}</span> on <span style="font-weight:bold">{{arr_date}}</span> 
+<span style="font-weight:bold">{{arr_info.stop_time}}</span>
+<br>
 <form method="post">
     {% csrf_token %}
     Quantity <input type="number" min="1" max={{settings.MAX_TICKETS_BOOKED}} step="1" name="quantity" autocomplete="off" required>
