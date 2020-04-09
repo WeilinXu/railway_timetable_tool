@@ -160,9 +160,6 @@ class TicketBuyView(LoginRequiredMixin, View):
         return redirect(reverse_lazy('timetable_tool:train_search'))
 
 
-
-            
-
 class TicketCancelView(LoginRequiredMixin, View):
     template = "ticket_cancel.html"
     def get(self, request, pk_tks):

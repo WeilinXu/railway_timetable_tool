@@ -207,3 +207,8 @@ if (len(sys.argv) >= 2 and sys.argv[1] == 'runserver'):
         }
     }
 '''
+
+# APP Parameters:
+MAX_STATION_LENGTH = 20
+MAX_ROUTE_LENGTH = 20
+MAX_TICKETS_BOOKED = 3

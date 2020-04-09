@@ -20,7 +20,6 @@ def replace_from_dash(route_num):
 def replace_to_dash(route_num):
     return route_num.replace('-','/')
 
-# TODO: remove magic numbers: railwayhistory.app.config['MAX_STATION_LENGTH']
 def valid_station(station_in):
     return (station_in and len(station_in) <= 20)
 

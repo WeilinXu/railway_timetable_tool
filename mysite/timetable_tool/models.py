@@ -7,7 +7,7 @@ from django.conf import settings
 # leave primary key as default now
 class stations(models.Model):   # actual name: timetable_tool_stations
     station_name = models.CharField(
-            max_length=20,
+            max_length = settings.MAX_STATION_LENGTH,
             validators=[MinLengthValidator(2, "Station Name must be greater than 1 character")]
     )
 
@@ -16,7 +16,7 @@ class stations(models.Model):   # actual name: timetable_tool_stations
 
 class train_records(models.Model):  # actual name: timetable_tool_train_records
     train_number = models.CharField(
-            max_length=20,
+            max_length = settings.MAX_ROUTE_LENGTH,
             validators=[MinLengthValidator(2, "Train Number must be greater than 1 character")]
     )
     train_from = models.ForeignKey(stations, related_name='from_id', on_delete=models.CASCADE)  # train_from_id
@@ -48,6 +48,7 @@ class tickets(models.Model):
 
 '''
 # TODO: allow one customer to buy tickets for others
+# TODO: check schedule conflict
 class customers(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # name = models.CharField(max_length=100)
