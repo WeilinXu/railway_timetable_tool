@@ -1,12 +1,10 @@
 {% extends "base_menu.html" %}
-
 {% block content %}
 <h3> Station to Station Search </h3> 
 
 <form method="post">
 {% csrf_token %}
-Station <input type="text" name="station" autocomplete="off" required>
-Date <input type="date" name="date" autocomplete="off" required>
+{{station_form}}
 <input class="btn" type="submit" name="submit" value="Search">
 </form>
 <p>Routes for <b>{{station_input}}</b> on <b>{{date_input}}</b></p> 

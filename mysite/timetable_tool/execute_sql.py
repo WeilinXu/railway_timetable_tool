@@ -34,7 +34,7 @@ def valid_date(date_in):
         return False
     return True
    
-# TODO: date
+
 def get_route_query(route_in, date_in):
     route_query = "SELECT S.id AS station_id, S.station_name AS station_name, " \
                         + "T.id AS train_record_id, TR.station_no AS station_no, " \

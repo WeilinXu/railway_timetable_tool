@@ -35,7 +35,7 @@ urlpatterns = [
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print(str(BASE_DIR))
 SITE_ROOT = os.path.join(BASE_DIR, 'site')
-# TODO: change SITE_ROOT to BASE_DIR
+# NOTE: change SITE_ROOT to BASE_DIR
 urlpatterns += [
     url(r'^site/(?P<path>.*)$', serve,
         {'document_root': SITE_ROOT, 'show_indexes': True},

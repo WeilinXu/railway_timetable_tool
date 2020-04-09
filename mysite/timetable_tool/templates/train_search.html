@@ -5,9 +5,7 @@
 
 <form method="post">
 {% csrf_token %}
-Depart From <input type="text" name="station_depart" autocomplete="off" required>
-Go To <input type="text" name="station_dest" autocomplete="off" required>
-Date <input type="date" name="date" autocomplete="off" required>
+{{train_form}}
 <input class="btn" type="submit" name="submit" value="Search">
 </form>
 <p>Trains from <b>{{depart_input}}</b> to <b>{{dest_input}}</b> on <b>{{date_input}}</b></p> 

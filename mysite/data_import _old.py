@@ -11,11 +11,6 @@ add further: time, distance, comment
 invariant to maintain: station_id, route_id, end_date
 '''
 
-## TODO: rename / update, history, multiple_train_num
-## TODO: / to %2F in url
-## TODO: mo hu search
-## TODO: keep old search in form
-## TODO: consider date
 def get_station_sql(stop):
     s1 = "INSERT INTO timetable_tool_stations (station_name) " \
             + "VALUES ('{}');\n".format(stop)
