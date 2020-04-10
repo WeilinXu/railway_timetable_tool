@@ -1,9 +1,9 @@
 {% extends "base_menu.html" %}
 
 {% block content %}
-<h3> Train Search </h3> 
+<h3> Station to Station  Search </h3> 
 
-<form method="post">
+<form>
 {% csrf_token %}
 {{train_form}}
 <input class="btn" type="submit" name="submit" value="Search">

@@ -22,85 +22,92 @@ def index(request):
     return render(request, "index.html")
 
 def route_search(request, route_input = None, date_input = None):
-    if request.method == 'POST':
-        route_form = RouteForm(request.POST)
-        if(route_form.is_valid()):
-            route_input = route_form.cleaned_data['route_input']
-            date_input = route_form.cleaned_data['date_input']
-        else:
-            messages.error(request, "Error: Invalid form input")
-            context = {"route_form": route_form} 
-            return render(request, "route_search.html", context)
-    else:
+    if request.method == 'GET':
         route_form = RouteForm()
-        if route_input and date_input and valid_route(route_input) and valid_date(date_input):
-            route_input = replace_to_dash(route_input)
-        else:
-            if route_input or date_input:
+        context = {"route_form": route_form}
+        strval =  request.GET.get("submit", False)
+        if strval:
+            route_form = RouteForm(request.GET)
+            if(route_form.is_valid()):
+                route_input = route_form.cleaned_data['route_input']
+                date_input = route_form.cleaned_data['date_input']
+            else:
+                messages.error(request, "Error: Invalid form input")
+                return render(request, "route_search.html", context)
+        elif(route_input or date_input):
+            if route_input and date_input  \
+                and valid_route(route_input) and valid_date(date_input):
+                route_input = replace_to_dash(route_input)
+            else:
                 messages.error(request, "Error: Invalid input")
-            context = {"route_form": route_form}
+                return render(request, "route_search.html", context)
+        else:
             return render(request, "route_search.html", context)
-    
-    stops = get_route_query(route_input, date_input)
-    context = {"route_input": route_input, "date_input": date_input, \
-                "stops": stops, "route_form": route_form}
-    
-    return render(request, "route_search.html", context)
+        
+        stops = get_route_query(route_input, date_input)
+        context = {"route_input": route_input, "date_input": date_input, \
+                    "stops": stops, "route_form": route_form}
+        return render(request, "route_search.html", context)
 
     
 def station_search(request, station_input = None, date_input = None):
-    if request.method == 'POST':
-        station_form = StationForm(request.POST)
-        if(station_form.is_valid()):
-            station_input = station_form.cleaned_data['station_input']
-            date_input = station_form.cleaned_data['date_input']
-        else:
-            messages.error(request, "Error: Invalid form input")
-            context = {"station_form": station_form} 
-            return render(request, "station_search.html", context)
-    else:
+    if request.method == 'GET':
         station_form = StationForm()
-        if not station_input or not date_input \
-            or not valid_station(station_input) or not valid_date(date_input):
-            if(station_input or date_input):
-                messages.error(request, "Error: Invalid input")
-            context = {"station_form": station_form}
-            return render(request, "station_search.html", context)
+        context = {"station_form": station_form}
 
-    routes = get_station_query(station_input, date_input)
-    context = {"station_input": station_input, "date_input": date_input, \
-            "routes": routes, "station_form": station_form}
-    
-    return render(request, "station_search.html", context)
+        strval =  request.GET.get("submit", False)
+        if strval:
+            station_form = StationForm(request.GET)
+            if(station_form.is_valid()):
+                station_input = station_form.cleaned_data['station_input']
+                date_input = station_form.cleaned_data['date_input']
+            else:
+                messages.error(request, "Error: Invalid form input")
+                return render(request, "station_search.html", context)
+        elif(station_input or date_input):
+            if not station_input or not date_input \
+                or not valid_station(station_input) or not valid_date(date_input):
+                messages.error(request, "Error: Invalid input")
+                return render(request, "station_search.html", context)
+        else:
+            return render(request, "station_search.html", context)
+        
+        routes = get_station_query(station_input, date_input)
+        context = {"station_input": station_input, "date_input": date_input, \
+                "routes": routes, "station_form": station_form}
+        return render(request, "station_search.html", context)
 
 
 def train_search(request, depart_input = None, dest_input = None, date_input = None):
-    if request.method == 'POST':
-        train_form = TrainForm(request.POST)
-        if(train_form.is_valid()):
-            depart_input = train_form.cleaned_data['depart_input']
-            dest_input = train_form.cleaned_data['dest_input']
-            date_input = train_form.cleaned_data['date_input']
-        else:
-            messages.error(request, "Error: Invalid form input")
-            context = {"train_form": train_form} 
-            return render(request, "train_search.html", context)
-    else:
+    if request.method == 'GET':
         train_form = TrainForm()
         context = {"train_form": train_form}
-        if not depart_input or not dest_input or not date_input \
-            or not valid_station(depart_input) or not valid_station(dest_input) \
-            or not valid_date(date_input):
-            if(depart_input or dest_input or date_input):
-                messages.error(request, "Error: Invalid input")
-            context = {"train_form": train_form}
+        strval =  request.GET.get("submit", False)
+        if strval:
+            train_form = TrainForm(request.GET)
+            if(train_form.is_valid()):
+                depart_input = train_form.cleaned_data['depart_input']
+                dest_input = train_form.cleaned_data['dest_input']
+                date_input = train_form.cleaned_data['date_input']
+            else:
+                messages.error(request, "Error: Invalid form input")
+                return render(request, "train_search.html", context)
+        elif(depart_input or dest_input or date_input):
+            print("3")
+            if not depart_input or not dest_input or not date_input \
+                or not valid_station(depart_input) or not valid_station(dest_input) \
+                or not valid_date(date_input):
+                if(depart_input or dest_input or date_input):
+                    messages.error(request, "Error: Invalid input")
+                
+                return render(request, "train_search.html", context)
+        else:
             return render(request, "train_search.html", context)
-
-    trains = get_train_query(depart_input, dest_input, date_input)
-    context = {"depart_input": depart_input, "dest_input": dest_input, \
-            "date_input": date_input, "trains": trains, "train_form": train_form}
-    
-    return render(request, "train_search.html", context)
+        
+        trains = get_train_query(depart_input, dest_input, date_input)
+        context = {"depart_input": depart_input, "dest_input": dest_input, \
+                "date_input": date_input, "trains": trains, "train_form": train_form}
+        return render(request, "train_search.html", context)
 
 
 class TicketListView(LoginRequiredMixin, View):
@@ -110,8 +117,6 @@ class TicketListView(LoginRequiredMixin, View):
         return render(request, self.template, context=context)
     
     def post(self, request):
-        # context = {}
-        #if request.POST.get('submit') == 'submit':
         user_tickets = get_ticket_bought(self.request.user.id)
         request.session['my_tickets'] = {}
         for user_ticket in user_tickets:
