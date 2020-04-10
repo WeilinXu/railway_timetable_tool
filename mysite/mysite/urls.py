@@ -33,13 +33,21 @@ urlpatterns = [
 ]
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print(str(BASE_DIR))
 SITE_ROOT = os.path.join(BASE_DIR, 'site')
 # NOTE: change SITE_ROOT to BASE_DIR
 urlpatterns += [
     url(r'^site/(?P<path>.*)$', serve,
         {'document_root': SITE_ROOT, 'show_indexes': True},
         name='site_path'
+    ),
+]
+
+# Serve the favicon - Keep for later
+urlpatterns += [
+    path('favicon.ico', serve, {
+            'path': 'favicon.ico',
+            'document_root': os.path.join(BASE_DIR, 'home/static'),
+        }
     ),
 ]
 
