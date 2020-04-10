@@ -36,7 +36,10 @@
             </li>
         {% else %}
         <li>
-        <a href="{% url 'login' %}?next={% url 'timetable_tool:station_search' %}">Login</a>
+            <a href="{% url 'login' %}?next={% url 'timetable_tool:station_search' %}">Login</a>
+        </li>
+        <li>
+            <a href="{% url 'register' %}">Sign up</a>
         </li>
         {% endif %}
     </ul>

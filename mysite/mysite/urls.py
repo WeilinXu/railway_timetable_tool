@@ -27,6 +27,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='home/main.html')),
+    path('', include('home.urls')),
     path('timetable_tool/', include('timetable_tool.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     url(r'^oauth/', include('social_django.urls', namespace='social')),  # Keep

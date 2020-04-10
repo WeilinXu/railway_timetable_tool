@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'crispy_forms',  
     'rest_framework', 
     'social_django',  
+    # 'register.apps.RegisterConfig', # new added
 
     'home.apps.HomeConfig',    # new added
     'timetable_tool.apps.TimetableToolConfig'   # new added
