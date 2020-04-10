@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls import url
 from . import views
 
 app_name = 'timetable_tool'
@@ -14,4 +15,7 @@ urlpatterns = [
     path('ticketlist/', views.TicketListView.as_view(), name='ticket_all'),
     path('ticketbuy/<pk_from>/<pk_to>/<pk_date>', views.TicketBuyView.as_view(), name='ticket_buy'),
     path('ticket/<int:pk_tks>/cancel', views.TicketCancelView.as_view(), name='ticket_cancel'),
+
+    url(r'^ajax/station_autocomplete/$', views.station_autocomplete, name='station_autocomplete'),
+    url(r'^ajax/route_autocomplete/$', views.route_autocomplete, name='route_autocomplete'),
 ]

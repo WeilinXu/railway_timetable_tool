@@ -25,5 +25,28 @@
     {% endfor %}
 </table>
 
+<script>
+jQuery(function() {
+    $("#id_route_input").on('keyup', function(){
+        var value = $(this).val();
+        $.ajax({
+            url: "{% url 'timetable_tool:route_autocomplete' %}",
+            data: {
+                'search': value 
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log("success");
+                result_list = data.result_list;
+                $("#id_route_input").autocomplete({
+                source: result_list,
+                minLength: 2 
+                });       
+            }
+        });        
+    });
+    });
+</script>
+
 {% endblock %}
 

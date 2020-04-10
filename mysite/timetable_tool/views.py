@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
@@ -208,3 +208,25 @@ class TicketCancelView(LoginRequiredMixin, View):
 
         return redirect(reverse_lazy('timetable_tool:ticket_all'))
             
+
+def station_autocomplete(request):  # get_town
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        stations_down = stations.objects.filter(station_name__startswith = q)
+        results = []
+        for station_down in stations_down:
+            name_json = station_down.station_name   # name
+            results.append(name_json)
+        data = {'result_list': results}
+        return JsonResponse(data)
+
+def route_autocomplete(request):  # get_town
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        routes_down = train_records.objects.filter(train_number__startswith = q)
+        results = []
+        for route_down in routes_down:
+            name_json = route_down.train_number   # name
+            results.append(name_json)
+        data = {'result_list': results}
+        return JsonResponse(data)

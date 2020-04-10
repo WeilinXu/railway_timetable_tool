@@ -34,4 +34,45 @@
     </tr>
     {% endfor %}
 </table>
+<script>
+jQuery(function() {
+    $("#id_station_input").on('keyup', function(){
+        var value = $(this).val();
+        $.ajax({
+            url: "{% url 'timetable_tool:station_autocomplete' %}",
+            data: {
+                'search': value 
+            },
+            dataType: 'json',
+            success: function (data) {
+                result_list = data.result_list;
+                $("#id_station_input").autocomplete({
+                source: result_list,
+                minLength: 2 
+                });       
+            }
+        });        
+    });
+});
+
+jQuery(function() {
+    $("#id_station_input2").on('keyup', function(){
+        var value = $(this).val();
+        $.ajax({
+            url: "{% url 'timetable_tool:station_autocomplete' %}",
+            data: {
+                'search': value 
+            },
+            dataType: 'json',
+            success: function (data) {
+                result_list = data.result_list;
+                $("#id_station_input2").autocomplete({
+                source: result_list,
+                minLength: 2 
+                });       
+            }
+        });        
+    });
+    });
+</script>
 {% endblock %}
