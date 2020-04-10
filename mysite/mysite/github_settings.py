@@ -12,7 +12,7 @@
 # Application name: ChuckList Local
 # Homepage Url: http://localhost:8000
 # Application Description: Whatever
-# Authorization callback URL: http://127.0.0.1:8000/oauth/complete/github/
+# Authorization callback URL: http://localhost:8000/oauth/complete/github/
 
 
 # Using PythonAnywhere here are some settings:
@@ -27,5 +27,5 @@
 
 # Then copy the client_key and secret to this file
 
-SOCIAL_AUTH_GITHUB_KEY = 'c051264ec4460cccf659'
-SOCIAL_AUTH_GITHUB_SECRET = 'c99eef6f13dbc6e6d31d32ff279c3844a8439017'
+SOCIAL_AUTH_GITHUB_KEY = '35dbe9b7d431df65b8dd'
+SOCIAL_AUTH_GITHUB_SECRET = 'e13794c53f8f5fe74488dd5d7c4c832d6cbb682a'
