@@ -7,6 +7,7 @@
 {% csrf_token %}
 {{train_form}}
 <input class="btn" type="submit" name="submit" value="Search">
+<input type="button" onclick="swap_input()" value="Swap">
 </form>
 <p>Trains from <b>{{depart_input}}</b> to <b>{{dest_input}}</b> on <b>{{date_input}}</b></p> 
 
@@ -34,6 +35,13 @@
     {% endfor %}
 </table>
 <script>
+function swap_input(){
+    var dep_old = document.getElementById("id_station_input").value;
+    var dest_old = document.getElementById("id_station_input2").value;
+    document.getElementById("id_station_input").value = dest_old;
+    document.getElementById("id_station_input2").value = dep_old;
+}
+
 jQuery(function() {
     $("#id_station_input").on('keyup', function(){
         var value = $(this).val();
