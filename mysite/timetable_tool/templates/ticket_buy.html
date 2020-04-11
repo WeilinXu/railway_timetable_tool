@@ -3,10 +3,13 @@
 {% block content %}
 <h3> Ticket Book </h3> 
 <span style="font-weight:bold">{{dep_info.train_number}}</span><br>
-Depart from <span style="font-weight:bold">{{dep_info.station_name}}</span> on <span style="font-weight:bold">{{dep_date}}</span> 
-<span style="font-weight:bold">{{dep_info.stop_time}}</span> <br>
-Arrive at <span style="font-weight:bold">{{arr_info.station_name}}</span> on <span style="font-weight:bold">{{arr_date}}</span> 
-<span style="font-weight:bold">{{arr_info.stop_time}}</span><br>
+Depart from <span style="font-weight:bold">{{dep_info.station_name}}</span> on  
+<span style="font-weight:bold">{{dep_date | date:"M-d-Y"}}</span>
+<span style="font-weight:bold">{{dep_info.stop_time | date:"h:i a"}}</span>,  
+<br>
+Arrive at <span style="font-weight:bold">{{arr_info.station_name}}</span> on 
+<span style="font-weight:bold">{{arr_date | date:"M-d-Y"}}</span> 
+<span style="font-weight:bold">{{arr_info.stop_time | date:"h:i a"}}</span> <br>
 Price: <span style="font-weight:bold" id = "price_out_id"> 0 </span>  Yuan 
 (<span id="ticket_price">{{price}} </span> Yuan per Ticket)
 <br>

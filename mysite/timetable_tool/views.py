@@ -107,24 +107,33 @@ def train_search(request, depart_input = None, dest_input = None, date_input = N
                 "date_input": date_input, "trains": trains, "train_form": train_form}
         return render(request, "train_search.html", context)
 
-
 class TicketListView(LoginRequiredMixin, View):
     template = 'ticket_list.html'  # 'order_system.html'
+    
     def get(self,request):
         context = {}
         return render(request, self.template, context=context)
-    
-    def post(self, request):
-        user_tickets = get_ticket_bought(self.request.user.id)
-        request.session['my_tickets'] = {}
-        for user_ticket in user_tickets:
-            request.session['my_tickets'][user_ticket["ticket_id"]] = \
-                    {"station_from": user_ticket["station_from"], \
-                    "train_number": user_ticket["train_number"], \
-                    "depart_date": str(user_ticket["train_date"]), \
-                    "price": user_ticket['price'],\
-                    "quantity": user_ticket['quantity'],}
-        context = {"tickets": user_tickets}
+     
+    def post(self,request):
+        context = {}
+        if 'future' in request.POST or 'history' in request.POST:
+            if('future' in request.POST):
+                user_tickets = get_ticket_bought(self.request.user.id, 'future')
+                can_cancel = True
+            else:
+                user_tickets = get_ticket_bought(self.request.user.id, 'history')
+                can_cancel = False
+            request.session['my_tickets'] = {}
+            for user_ticket in user_tickets:
+                request.session['my_tickets'][user_ticket["ticket_id"]] = \
+                        {"station_from": user_ticket["station_from"], \
+                        "station_to": user_ticket["station_to"], \
+                        "train_number": user_ticket["train_number"], \
+                        "depart_date": str(user_ticket["train_date"]), \
+                        "depart_time": str(user_ticket['dep_time']),\
+                        "price": user_ticket['price'],\
+                        "quantity": user_ticket['quantity'],}
+            context = {"tickets": user_tickets, "can_cancel": can_cancel}
         return render(request, self.template, context=context)
 
 
@@ -200,12 +209,14 @@ class TicketCancelView(LoginRequiredMixin, View):
                 messages.error(request, "Ticket doesn't exist!")
             else:
                 tickets_all = tickets.objects.get(id = ticket_cancel.ticket_id)
-                tickets_all.tickets_avaliable += ticket_cancel.quantity
-                money_return = ticket_cancel.price
-                tickets_all.save()
-                ticket_cancel.delete()
-                messages.success(request, "Ticket is cancelled successfully and {} Yuan will return to your account!".format(money_return))
-
+                if can_cancel(request.session['my_tickets'], pk_tks):
+                    tickets_all.tickets_avaliable += ticket_cancel.quantity
+                    money_return = ticket_cancel.price
+                    tickets_all.save()
+                    ticket_cancel.delete()
+                    messages.success(request, "Ticket is cancelled successfully and {} Yuan will return to your account!".format(money_return))
+                else:
+                    messages.error(request, "Past Ticket cannont be cancelled!")
         return redirect(reverse_lazy('timetable_tool:ticket_all'))
             
 

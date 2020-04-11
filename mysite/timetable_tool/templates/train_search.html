@@ -34,8 +34,8 @@
         <td> <a href="{% url 'timetable_tool:route_search2' train.train_link date_input%}">{{train.train_number }}</a> </td>
         <td>{{ train.station_depart }} </td>
         <td>{{ train.station_dest}}</td>
-        <td>{{ train.dep_time}} </td>
-        <td>{{ train.arr_time}} {{train.day_str}}</td>
+        <td>{{ train.dep_time | date:"h:i a"}} </td>
+        <td>{{ train.arr_time | date:"h:i a"}} {{train.day_str}}</td>
         <td> {{train.time_delta}} </td>
         <td> {{train.seats_avaliable}} </td>
         <td> {{train.price}} </td>

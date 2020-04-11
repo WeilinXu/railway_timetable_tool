@@ -27,8 +27,8 @@
         <td>{{ route.station_name }} </td>
         <td>{{ route.station_from }} </td> 
         <td>{{ route.station_to}} </td>
-        <td>{{ route.dep_time}}</td>
-        <td>{{ route.arr_time}}</td>
+        <td>{{ route.dep_time | date:"h:i a"}}</td>
+        <td>{{ route.arr_time | date:"h:i a"}}</td>
     </tr>
     {% endfor %}
 </table>

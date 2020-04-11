@@ -154,8 +154,11 @@ def get_train_query(depart_in, dest_in, date_in):
 
 
 
-def get_ticket_bought(user_id_in):
-    ticket_query = "SELECT TKS.id AS ticket_id, TK.train_date AS train_date, " \
+def get_ticket_bought(user_id_in, mode = 'future'):
+    datetime_now = datetime.datetime.now()
+    date_now = datetime_now.strftime("%Y-%m-%d")
+    clock_now = datetime_now.strftime("%H:%M")
+    q1 = "SELECT TKS.id AS ticket_id, TK.train_date AS train_date, " \
                     + "TKS.quantity AS quantity, TKS.price AS price, "\
                     + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, "\
                     + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
@@ -165,12 +168,19 @@ def get_ticket_bought(user_id_in):
                     + "timetable_tool_stop_records AS TRfrom, timetable_tool_stop_records AS TRto, "\
                     + "timetable_tool_stations S1, timetable_tool_stations S2, "\
                     + "timetable_tool_train_records T " \
-                    + "WHERE TKS.customer_id = {} AND TKS.ticket_id = TK.id "\
-                    + "AND TK.stop_from_id = TRfrom.id AND TK.stop_to_id = TRto.id "\
+                    + "WHERE TKS.customer_id = {} AND TKS.ticket_id = TK.id "
+    q3 = "AND TK.stop_from_id = TRfrom.id AND TK.stop_to_id = TRto.id "\
                     + "AND TRfrom.station_id = S1.id AND TRto.station_id = S2.id "\
                     + "AND TRfrom.train_record_id = T.id " \
                     + "ORDER BY TK.train_date DESC"
-    ticket_results = query_db(ticket_query.format(user_id_in), [])
+    if(mode is 'future'):
+        q2 = "AND (TK.train_date > %s "\
+            + "OR (TK.train_date = %s AND TRfrom.dep_time > %s )) "
+    else:
+        q2 = "AND (TK.train_date < %s "\
+            + "OR (TK.train_date = %s AND TRfrom.dep_time < %s )) "
+    ticket_query = q1 + q2 + q3
+    ticket_results = query_db(ticket_query.format(user_id_in), [date_now, date_now, clock_now])  # 
     for ticket_result in ticket_results:
         cur_day = ticket_result["train_date"]
         arr_date, _ = get_arr_date(ticket_result["dep_day"], cur_day, ticket_result["arr_day"])
@@ -205,6 +215,12 @@ def get_arr_date(dep_day_in, dep_date_in, arr_day_in):
 def get_price(km_distance):
     return int(0.3 * km_distance)
 
-
-
+def can_cancel(ticket_session_obj, idx):
+    if str(idx) not in ticket_session_obj:
+        return False
+    ticket_date = datetime.datetime.strptime(ticket_session_obj[str(idx)]['depart_date'], '%Y-%m-%d')
+    ticket_time = datetime.datetime.strptime(ticket_session_obj[str(idx)]['depart_time'],'%H:%M:%S').time()
+    ticket_datetime = datetime.datetime.combine(ticket_date, ticket_time)
+    return (ticket_datetime > datetime.datetime.now())
+    
 

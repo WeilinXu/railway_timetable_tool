@@ -3,7 +3,8 @@
 {% block content %}
 <h3> My Tickets </h3> 
 <form action="" method="post">{% csrf_token %}
-    <input class="btn" type="submit" name="submit" value="View My Tickets">
+    <input class="btn" type="submit" name="future" value="Future Reservations">
+    <input class="btn" type="submit" name="history" value="Historical Tickets">
 </form>
 
 <table>
@@ -17,14 +18,14 @@
         <td> <a href="{% url 'timetable_tool:route_search2' ticket.train_link ticket.train_date_str %}">{{ticket.train_number }}</a> </td>
         <td>
             <p>
-                {{ ticket.station_from }} <br>
-                {{ ticket.dep_datetime}}
+                {{ ticket.station_from}} <br>
+                {{ ticket.dep_datetime | date:"h:i a M-d-Y"}}
             </p>
         </td>
         <td>
             <p>
                 {{ ticket.station_to }} <br>
-                {{ ticket.arr_datetime}}
+                {{ ticket.arr_datetime | date:"h:i a M-d-Y"}}
             </p>
         </td>
         <td> 
@@ -35,7 +36,9 @@
                 </p>
         </td>
         <td>
+            {% if can_cancel %}
             <a href="{% url 'timetable_tool:ticket_cancel' ticket.ticket_id %}" class="btn btn-secondary">Cancel Ticket</a>
+            {% endif %}
         </td>
     </tr>
     {% endfor %}

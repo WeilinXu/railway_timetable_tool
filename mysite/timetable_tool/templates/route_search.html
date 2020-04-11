@@ -19,8 +19,8 @@
     <tr>
         <td> {{ stop.station_no }} </td>
         <td> <a href = "{% url 'timetable_tool:station_search2' stop.station_name date_input %}">{{ stop.station_name }}</a> </td>
-        <td> {{ stop.arr_time }} </td>
-        <td> {{ stop.dep_time }} </td>
+        <td> {{ stop.arr_time | date:"h:i a"}} </td>
+        <td> {{ stop.dep_time | date:"h:i a"}} </td>
         <td> {{ stop.arr_day }} </td>
         <td> {{ stop.km }} </td>
     </tr>
