@@ -9,9 +9,17 @@
 </form>
 <p>Routes for <b>{{station_input}}</b> on <b>{{date_input}}</b></p> 
 
-<table>
+<table id="station_table">
     <tr>
-        <th>No. </th> <th>Station</th> <th>From</th> <th>To</th> <th>Arrive Time</th> <th>Depart Time</th>
+        <th>No. </th> <th>Station</th> <th>From</th> <th>To</th> 
+        <th>Arrive Time
+            <button id = 'arr_up1' type="button" class="btn"  onclick="sortTableStation(0)">&#9653</button> 
+            <button id = 'arr_down1' type="button" class="btn"  onclick="sortTableStation(1)">&#9663</button>  
+        </th> 
+        <th>Depart Time
+            <button id = 'dep_up1' type="button" class="btn"  onclick="sortTableStation(2)">&#9653</button> 
+            <button id = 'dep_down1' type="button" class="btn"  onclick="sortTableStation(3)">&#9663</button> 
+        </th>
     </tr>
     {% for route in routes %}
     <tr>
@@ -19,13 +27,39 @@
         <td>{{ route.station_name }} </td>
         <td>{{ route.station_from }} </td> 
         <td>{{ route.station_to}} </td>
-        <td>{{ route.dep_time}} </td>
-        <td>{{ route.arr_time}} </td>
+        <td>{{ route.dep_time}}</td>
+        <td>{{ route.arr_time}}</td>
     </tr>
     {% endfor %}
 </table>
 
 <script>
+
+function sortTableStation(button_idx) {
+    arrow_bt = ['arr_up1', 'arr_down1', 'dep_up1', 'dep_down1'];
+    var cur_bt = arrow_bt[button_idx];
+    // Set the sorting direction to ascending:
+    var is_asc = (button_idx % 2 == 0);
+
+    // update arrow bars
+    var cur_text = document.getElementById(cur_bt).innerText;
+    if(cur_text == arrow_active_color[button_idx % 2]){
+        // already sorted
+        return;
+    }
+    for(var i = 0; i < arrow_bt.length; i++){
+        if(i == button_idx){
+            document.getElementById(arrow_bt[i]).innerText = arrow_active_color[i % 2];
+        }
+        else{
+            document.getElementById(arrow_bt[i]).innerText = arrow_deactive_color[i % 2];
+        }
+    }
+    var n = Math.floor(button_idx / 2) + 4;
+    var table_id = "station_table";
+    sortTable(table_id, n, is_asc);
+}
+
 jQuery(function() {
     $("#id_station_input").on('keyup', function(){
         var value = $(this).val();
