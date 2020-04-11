@@ -13,10 +13,19 @@
 
 <table id = "train_table">
     <tr> 
-        <th onclick="sortTable(0)"> No. </th> <th>Depart.</th> <th>Dest.</th> 
-         <th onclick="sortTable(4)">Arrive Time</th> 
-         <th onclick="sortTable(5)">Depart Time</th> 
-         <th onclick="sortTable(6)"> Time Length </th> 
+        <th> No. </th> <th>Depart.</th> <th>Dest.</th> 
+        <th>Arrive Time
+            <button id = 'arr_up' type="button" class="btn"  onclick="sortTable(0)">&#9653</button> 
+            <button id = 'arr_down' type="button" class="btn"  onclick="sortTable(1)">&#9663</button> 
+        </th> 
+         <th>Depart Time
+            <button id = 'dep_up' type="button" class="btn"  onclick="sortTable(2)">&#9653</button> 
+            <button id = 'dep_down' type="button" class="btn"  onclick="sortTable(3)">&#9663</button> 
+        </th> 
+         <th> Time Length
+            <button id = 't_up' type="button" class="btn"  onclick="sortTable(4)">&#9653</button> 
+            <button id = 't_down' type="button" class="btn"  onclick="sortTable(5)">&#9663</button> 
+        </th> 
          <th> Seats </th> <th> Price (Yuan) </th> <th>  </th>
     </tr>
     {% for train in trains %}
@@ -37,71 +46,76 @@
     {% endfor %}
 </table>
 <script>
+arrow_bt = ['arr_up', 'arr_down', 'dep_up', 'dep_down', 't_up', 't_down'];
+// arrow_active_color = ['&#9652', '&#9662'];
+//arrow_deactive_color = ['&#9653', '&#9663'];
+arrow_active_color = ['\u25b4', '\u25be'];
+arrow_deactive_color = ['\u25b5', '\u25bf'];
+
 function swap_input(){
     var dep_old = document.getElementById("id_station_input").value;
     var dest_old = document.getElementById("id_station_input2").value;
     document.getElementById("id_station_input").value = dest_old;
     document.getElementById("id_station_input2").value = dep_old;
 }
-/*
-function sort_datetime(t_str1, t_str2){
-    var t1_split = t_str1.split()
-    var t2_split = t_str2.split()
 
-}*/
-function sortTable(n) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById("train_table");  //TODO
-  switching = true;
-  // Set the sorting direction to ascending:
-  dir = "asc"; 
-  /* Make a loop that will continue until
-  no switching has been done: */
-  while (switching) {
-    // Start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /* Loop through all table rows (except the
-    first, which contains table headers): */
-    for (i = 1; i < (rows.length - 1); i++) {
-      // Start by saying there should be no switching:
-      shouldSwitch = false;
-      /* Get the two elements you want to compare,
-      one from current row and one from the next: */
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      /* Check if the two rows should switch place,
-      based on the direction, asc or desc: */
-      if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          // If so, mark as a switch and break the loop:
-          shouldSwitch = true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-          // If so, mark as a switch and break the loop:
-          shouldSwitch = true;
-          break;
-        }
-      }
+
+
+function sortTable(button_idx) {
+    var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
+    var cur_bt = arrow_bt[button_idx];
+    // Set the sorting direction to ascending:
+    var is_asc = (button_idx % 2 == 0);
+
+    // update arrow bars
+    
+    var cur_text = document.getElementById(cur_bt).innerText;
+    if(cur_text == arrow_active_color[button_idx % 2]){
+        // already sorted
+        return;
     }
-    if (shouldSwitch) {
-      /* If a switch has been marked, make the switch
-      and mark that a switch has been done: */
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      // Each time a switch is done, increase this count by 1:
-      switchcount ++; 
-    } else {
-      /* If no switching has been done AND the direction is "asc",
-      set the direction to "desc" and run the while loop again. */
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
-        switching = true;
-      }
+    for(i = 0; i < arrow_bt.length; i++){
+        if(i == button_idx){
+            document.getElementById(arrow_bt[i]).innerText = arrow_active_color[i % 2];
+        }
+        else{
+            document.getElementById(arrow_bt[i]).innerText = arrow_deactive_color[i % 2];
+        }
     }
-  }
+    
+    // sort function
+    var n = Math.floor(button_idx / 2) + 3;
+    table = document.getElementById("train_table");
+    switching = true;
+    /* Make a loop that will continue until
+    no switching has been done: */
+    while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+            // Start by saying there should be no switching:
+            // shouldSwitch = false;
+            /* Get the two elements you want to compare,
+            one from current row and one from the next: */
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            /* Check if the two rows should switch place,
+            based on the direction, asc or desc: */
+            shouldSwitch = sort_cell(x, y, is_asc);
+            if(shouldSwitch){break;}
+        }
+        if (shouldSwitch) {
+            /* If a switch has been marked, make the switch
+            and mark that a switch has been done: */
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            // Each time a switch is done, increase this count by 1:
+            switchcount ++; 
+        } 
+    }
 }
 
 jQuery(function() {
