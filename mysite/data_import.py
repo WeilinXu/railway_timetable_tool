@@ -26,8 +26,9 @@ def get_route_sql(number, fromid, toid):
 
 def get_stop_sql(tid, s_info, sno):
     s1 = "INSERT INTO timetable_tool_stop_records (train_record_id, station_id, station_no, "\
-        + "arr_time, arr_day, dep_time, dep_day) " \
-        + "VALUES ({}, {}, {}, '{}', {}, '{}', {});\n".format(tid, s_info[0], sno, s_info[1], s_info[3], s_info[2], s_info[4])
+        + "arr_time, arr_day, dep_time, dep_day, km) " \
+        + "VALUES ({}, {}, {}, '{}', {}, '{}', {}, {});\n".format( \
+        tid, s_info[0], sno, s_info[1], s_info[3], s_info[2], s_info[4], s_info[5])
     return s1
 
 def get_ticket_sql(tr_id1, tr_id2, ticket_date = '2020-05-05', tickets_avaliable = 5):
@@ -96,12 +97,12 @@ def parse_data(filepath_read, filepath_write, station2id):
             train_nums = items[0]
             continue
         
-        if(len(items) is 4):
+        if(len(items) is 5):
             stop_name = items[0]+ ' ' + items[1]
         else:
             stop_name = items[0]
-        arrive_time = datetime.datetime.strptime(items[-2], '%H:%M').time()
-        depart_time = datetime.datetime.strptime(items[-1], '%H:%M').time()
+        arrive_time = datetime.datetime.strptime(items[-3], '%H:%M').time()
+        depart_time = datetime.datetime.strptime(items[-2], '%H:%M').time()
         temp = [station2id[stop_name], arrive_time, depart_time]
         # day convention
         if(arrive_time < last_time):
@@ -111,6 +112,7 @@ def parse_data(filepath_read, filepath_write, station2id):
         if(depart_time < last_time):
             day_u += 1
         temp.append(day_u)
+        temp.append(int(items[-1]))
         last_time = depart_time
         stops.append(temp)
     

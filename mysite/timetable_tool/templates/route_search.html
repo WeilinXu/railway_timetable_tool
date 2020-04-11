@@ -12,7 +12,8 @@
 
 <table>
     <tr>
-        <th> No. </th> <th style="text-align:center"> Station </th> <th>Arrive Time</th> <th>Depart Time</th> <th>Day</th> 
+        <th> No. </th> <th style="text-align:center"> Station </th> <th>Arrive Time</th> 
+        <th>Depart Time</th> <th>Day</th> <th> Distance (km) </th> 
     </tr>
     {% for stop in stops %}
     <tr>
@@ -21,6 +22,7 @@
         <td> {{ stop.arr_time }} </td>
         <td> {{ stop.dep_time }} </td>
         <td> {{ stop.arr_day }} </td>
+        <td> {{ stop.km }} </td>
     </tr>
     {% endfor %}
 </table>

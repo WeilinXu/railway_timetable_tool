@@ -8,11 +8,6 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core import validators
 
-class BuyForm(forms.ModelForm):
-    class Meta:
-        model = tickets_sold
-        fields = ['quantity']  # Picture is manual
-
 class RouteForm(forms.Form):
     route_input = forms.CharField(label='Route No.', max_length= settings.MAX_ROUTE_LENGTH, \
                     widget=forms.TextInput(attrs={'id': 'id_route_input'}))

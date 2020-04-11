@@ -46,7 +46,7 @@ class stop_records(models.Model):   # actual name: timetable_tool_stop_records
     dep_time = models.TimeField()
     dep_day = models.PositiveSmallIntegerField()
 
-    # dist = models.PositiveSmallIntegerField(blank=True, default=None)
+    km = models.PositiveSmallIntegerField()
 
 class tickets(models.Model):
     class Meta:
@@ -70,6 +70,7 @@ class tickets_sold(models.Model):
     ticket = models.ForeignKey(tickets, on_delete=models.CASCADE)
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     seat_number = models.PositiveSmallIntegerField()
+    price = models.PositiveSmallIntegerField()
     quantity = models.PositiveSmallIntegerField(default=1)
 
 

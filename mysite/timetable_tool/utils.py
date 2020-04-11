@@ -38,13 +38,15 @@ def get_route_query(route_in, date_in):
     route_query = "SELECT S.id AS station_id, S.station_name AS station_name, " \
                         + "T.id AS train_record_id, TR.station_no AS station_no, " \
                         + "TR.arr_time AS arr_time, TR.arr_day AS arr_day, " \
-                        + "TR.dep_time AS dep_time " \
+                        + "TR.dep_time AS dep_time, TR.km AS km " \
                     + "FROM timetable_tool_stations S, timetable_tool_train_records T, timetable_tool_stop_records TR " \
                     + "WHERE T.id = TR.train_record_id AND S.id = TR.station_id "\
                         + "AND T.train_number = %s "  \
                     + " ORDER BY station_no" 
-    route_result = query_db(route_query, args = [route_in])
-    return route_result
+    route_results = query_db(route_query, args = [route_in])
+    for route_result in route_results:
+        route_result["arr_day"] = route_result["arr_day"] + 1
+    return route_results
 
 
 
@@ -95,6 +97,7 @@ def get_train_query(depart_in, dest_in, date_in):
                             + "T.id AS train_record_id, T.train_number AS train_number, " \
                             + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, " \
                             + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
+                            + "TRfrom.km AS km_from, TRto.km AS km_to, "\
                             + "TRto.id AS TRto_id, TRfrom.id AS TRfrom_id " \
                         + "FROM timetable_tool_stations Sfrom, timetable_tool_stations Sto, timetable_tool_stop_records TRfrom, " \
                             + "timetable_tool_stop_records TRto, timetable_tool_train_records T " \
@@ -138,6 +141,8 @@ def get_train_query(depart_in, dest_in, date_in):
         t2 = datetime.datetime.combine(arr_date, train_result["arr_time"])
         t1 = datetime.datetime.combine(cur_day, train_result["dep_time"])
         train_result['time_delta'] = t2 - t1 
+        train_result['km_delta'] = train_result['km_to'] - train_result['km_from']
+        train_result['price'] = get_price(train_result['km_delta'])
         # seat avaliable search
         if tickets.objects.filter(stop_from_id = train_result["TRfrom_id"], \
                 stop_to_id = train_result["TRto_id"], train_date = date_in): 
@@ -152,6 +157,7 @@ def get_train_query(depart_in, dest_in, date_in):
 
 def get_ticket_bought(user_id_in):
     ticket_query = "SELECT TKS.id AS ticket_id, TK.train_date AS train_date, " \
+                    + "TKS.quantity AS quantity, TKS.price AS price, "\
                     + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, "\
                     + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
                     + "S1.station_name AS station_from, S2.station_name AS station_to, "\
@@ -190,11 +196,15 @@ def get_stop_record_info(stop_record_id_in, is_arr = False):
     station_obj = stations.objects.get(id =  stop_record_obj.station_id)
     stop_info['station_name'] = station_obj.station_name
     stop_info['train_number'] = route_obj.train_number
+    stop_info['km'] = stop_record_obj.km
     return stop_info
 
 def get_arr_date(dep_day_in, dep_date_in, arr_day_in):
     delta_day =  arr_day_in - dep_day_in
     return dep_date_in + datetime.timedelta(days = delta_day), delta_day
+
+def get_price(km_distance):
+    return int(0.3 * km_distance)
 
 
 

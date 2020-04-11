@@ -6,12 +6,25 @@
 Depart from <span style="font-weight:bold">{{dep_info.station_name}}</span> on <span style="font-weight:bold">{{dep_date}}</span> 
 <span style="font-weight:bold">{{dep_info.stop_time}}</span> <br>
 Arrive at <span style="font-weight:bold">{{arr_info.station_name}}</span> on <span style="font-weight:bold">{{arr_date}}</span> 
-<span style="font-weight:bold">{{arr_info.stop_time}}</span>
+<span style="font-weight:bold">{{arr_info.stop_time}}</span><br>
+Price: <span style="font-weight:bold" id = "price_out_id"> 0 </span>  Yuan 
+(<span id="ticket_price">{{price}} </span> Yuan per Ticket)
 <br>
 <form method="post">
     {% csrf_token %}
-    Quantity <input type="number" min="1" max={{settings.MAX_TICKETS_BOOKED}} step="1" name="quantity" autocomplete="off" required>
+    Quantity <input id= 'quantity_in_id' type="number" min="1" max={{settings.MAX_TICKETS_BOOKED}} step="1" name="quantity" autocomplete="off" required oninput="calc()">
     <input class="btn" type="submit" name="submit" value="Book">
     <a href="{% url 'timetable_tool:train_search' %}" class="btn btn-secondary">Cancel</a>
 </form>
+
+<script>
+function calc(){
+    var price = document.getElementById("ticket_price").innerHTML;
+    var noTickets = document.getElementById("quantity_in_id").value;
+    var total = parseInt(price) * noTickets;
+    if (!isNaN(total)){
+        document.getElementById("price_out_id").innerHTML = total;
+    }
+}
+</script>
 {% endblock %}

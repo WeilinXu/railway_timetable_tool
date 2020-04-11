@@ -9,11 +9,10 @@ from django.views import View
 
 
 from timetable_tool.models import stations, train_records, stop_records, tickets, tickets_sold
-from timetable_tool.forms import BuyForm, RouteForm, StationForm, TrainForm
+from timetable_tool.forms import RouteForm, StationForm, TrainForm
 from timetable_tool.utils import *
 
 # TODO: active menu bar
-# TODO: unclear search
 ## TODO: / to %2F in url
 ## TODO: consider date in search (not assume run every day)
 
@@ -122,34 +121,33 @@ class TicketListView(LoginRequiredMixin, View):
             request.session['my_tickets'][user_ticket["ticket_id"]] = \
                     {"station_from": user_ticket["station_from"], \
                     "train_number": user_ticket["train_number"], \
-                    "depart_date": str(user_ticket["train_date"])}
+                    "depart_date": str(user_ticket["train_date"]), \
+                    "price": user_ticket['price'],\
+                    "quantity": user_ticket['quantity'],}
         context = {"tickets": user_tickets}
         return render(request, self.template, context=context)
 
 
 class TicketBuyView(LoginRequiredMixin, View):
     template = 'ticket_buy.html'
-    
     def get(self, request, pk_from, pk_to, pk_date):
         dep_info = get_stop_record_info(pk_from, is_arr = False)
         arr_info = get_stop_record_info(pk_to, is_arr = True)
         dep_date = datetime.datetime.strptime(pk_date, '%Y-%m-%d')
         arr_date, _ = get_arr_date(dep_info['stop_day'], dep_date, arr_info['stop_day'])
-        form = BuyForm()
-        ctx = { 'form': form, 'dep_info': dep_info, 'dep_date': dep_date, \
-                'arr_info': arr_info, 'arr_date': arr_date}
+        price = get_price(arr_info['km'] - dep_info['km'])
+        request.session['current_price'] = price
+        ctx = {'dep_info': dep_info, 'dep_date': dep_date, \
+                'arr_info': arr_info, 'arr_date': arr_date, 'price': price}
         return render(request, self.template, ctx)
 
     def post(self, request, pk_from, pk_to, pk_date) :
-        form = BuyForm(request.POST)
         '''
         if not form.is_valid() :
             print("Form not valid!")
             messages.error(request, "Form not valid!")
             return render(request, self.template, ctx)
         '''
-        ctx = {'form' : form}
-            
         
         if not tickets.objects.filter(stop_from_id = pk_from, \
                     stop_to_id = pk_to, train_date = pk_date): 
@@ -165,13 +163,15 @@ class TicketBuyView(LoginRequiredMixin, View):
             else:
                 messages.success(request, "Success!")
                 # Add owner to the model before saving
-                ticket_sold = form.save(commit=False)
-                ticket_sold.customer = self.request.user
-                ticket_sold.ticket_id = tickets_all.id
-                ticket_sold.seat_number = tickets_all.tickets_avaliable
+                quantity_in = int(request.POST['quantity'])
+                ticket_sold = tickets_sold(customer = self.request.user, \
+                                ticket_id = tickets_all.id, \
+                                seat_number = tickets_all.tickets_avaliable, \
+                                quantity = quantity_in, \
+                                price = request.session['current_price'] * quantity_in)
                 ticket_sold.save()
                 # update tickets avaliable
-                tickets_all.tickets_avaliable -= int(request.POST['quantity'])
+                tickets_all.tickets_avaliable -= quantity_in
                 tickets_all.save()
                 return redirect(reverse_lazy('timetable_tool:ticket_all'))
         return redirect(reverse_lazy('timetable_tool:train_search'))
@@ -201,9 +201,10 @@ class TicketCancelView(LoginRequiredMixin, View):
             else:
                 tickets_all = tickets.objects.get(id = ticket_cancel.ticket_id)
                 tickets_all.tickets_avaliable += ticket_cancel.quantity
+                money_return = ticket_cancel.price
                 tickets_all.save()
                 ticket_cancel.delete()
-                messages.success(request, "Ticket is cancelled successfully!")
+                messages.success(request, "Ticket is cancelled successfully and {} Yuan will return to your account!".format(money_return))
 
         return redirect(reverse_lazy('timetable_tool:ticket_all'))
             

@@ -9,7 +9,7 @@
 <table>
     <tr> 
         <th> Ticket No. </th> <th>Trian No. </th> <th> Departure </th> <th> Arrival </th>
-        <th> Operation </th>
+        <th> Cost </th> <th> Operation </th>
     </tr>
     {% for ticket in tickets %}
     <tr>
@@ -26,6 +26,12 @@
                 {{ ticket.station_to }} <br>
                 {{ ticket.arr_datetime}}
             </p>
+        </td>
+        <td> 
+                <p>
+                    {{ticket.quantity}} Tickets <br> 
+                    {{ticket.price}} Yuan 
+                </p>
         </td>
         <td>
             <a href="{% url 'timetable_tool:ticket_cancel' ticket.ticket_id %}" class="btn btn-secondary">Cancel Ticket</a>
