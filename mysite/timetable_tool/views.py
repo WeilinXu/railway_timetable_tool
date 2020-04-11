@@ -13,10 +13,9 @@ from timetable_tool.forms import BuyForm, RouteForm, StationForm, TrainForm
 from timetable_tool.utils import *
 
 # TODO: active menu bar
-# TODO: solve menu dropdown issue in Chrome
-# TODO: comfirm buy and cancel page with more information
-# TODO: auto complete
 # TODO: unclear search
+## TODO: / to %2F in url
+## TODO: consider date in search (not assume run every day)
 
 def index(request):
     return render(request, "index.html")

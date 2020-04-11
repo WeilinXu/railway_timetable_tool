@@ -5,14 +5,24 @@ from django.conf import settings
 
 
 # leave primary key as default now
+class station_groups(models.Model):
+    city_name = models.CharField(
+            max_length = settings.MAX_STATION_LENGTH,
+            validators=[MinLengthValidator(2, "Station Name must be greater than 1 character")]
+    )
+    def __str__(self):
+        return  "Group: "+ self.city_name
+
 class stations(models.Model):   # actual name: timetable_tool_stations
     station_name = models.CharField(
             max_length = settings.MAX_STATION_LENGTH,
             validators=[MinLengthValidator(2, "Station Name must be greater than 1 character")]
     )
+    group_city = models.ForeignKey(station_groups, related_name='group_id', on_delete=models.CASCADE) 
 
     def __str__(self):
         return self.station_name
+
 
 class train_records(models.Model):  # actual name: timetable_tool_train_records
     train_number = models.CharField(

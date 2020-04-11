@@ -5,18 +5,16 @@ import datetime
 
 '''
 record sytle:
-route_number1,route_number2 | start_date | end_date | 
-        stop1/u(arrive_time/depart_time), ..., stopN | \n
-add further: time, distance, comment
-invariant to maintain: station_id, route_id, end_date
+see files in /var/upload
 '''
+def get_group_sql(group_name):
+    s0 = "INSERT INTO timetable_tool_station_groups (city_name) " \
+            + "VALUES ('{}');\n".format(group_name) 
+    return s0
 
-## TODO: / to %2F in url
-## TODO: consider date in search (not assume run every day)
-def get_station_sql(stop):
-    s1 = "INSERT INTO timetable_tool_stations (station_name) " \
-            + "VALUES ('{}');\n".format(stop)
-    
+def get_station_sql(stop, group_id):
+    s1 = "INSERT INTO timetable_tool_stations (station_name, group_city_id) " \
+            + "VALUES ('{}', {});\n".format(stop, group_id) 
     return s1
 
 def get_route_sql(number, fromid, toid):
@@ -43,11 +41,18 @@ def count_stations(filepath_read, filepath_write):
     f_write = open(filepath_write, 'w')
     lines_r = f_read.readlines()
     count = 1
+    group_count = 0
     for line_r in lines_r:
         if line_r == '\n':
             continue
         item = line_r[:-1]  # remove last '\n'
-        f_write.writelines(get_station_sql(item)) 
+        if(item[0] == '-'):  # station of the same city
+            item = item[1:]
+        else:
+            f_write.writelines(get_group_sql(item)) 
+            group_count += 1
+
+        f_write.writelines(get_station_sql(item, group_count)) 
         station2id[item] = count
         count += 1
           

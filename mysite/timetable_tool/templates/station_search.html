@@ -36,7 +36,6 @@ jQuery(function() {
             },
             dataType: 'json',
             success: function (data) {
-                console.log("success");
                 result_list = data.result_list;
                 $("#id_station_input").autocomplete({
                 source: result_list,
