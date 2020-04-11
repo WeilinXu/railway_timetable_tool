@@ -40,7 +40,9 @@
         <td> {{train.seats_avaliable}} </td>
         <td> {{train.price}} </td>
         <td>
-            <a href="{% url 'timetable_tool:ticket_buy' train.TRfrom_id train.TRto_id date_input%}" class="btn btn-secondary">Buy Ticket</a>
+            {% if train.can_buy %}
+                <a href="{% url 'timetable_tool:ticket_buy' train.TRfrom_id train.TRto_id date_input%}" class="btn btn-secondary">Buy Ticket</a>
+            {% endif %}  
         </td>
     </tr>
     {% endfor %}

@@ -150,6 +150,8 @@ def get_train_query(depart_in, dest_in, date_in):
             train_result["seats_avaliable"] = tickets_all.tickets_avaliable
         else:
             train_result["seats_avaliable"] = 0
+        train_result['can_buy'] = (t1 > datetime.datetime.now())
+
     return train_results
 
 
@@ -172,14 +174,16 @@ def get_ticket_bought(user_id_in, mode = 'future'):
     q3 = "AND TK.stop_from_id = TRfrom.id AND TK.stop_to_id = TRto.id "\
                     + "AND TRfrom.station_id = S1.id AND TRto.station_id = S2.id "\
                     + "AND TRfrom.train_record_id = T.id " \
-                    + "ORDER BY TK.train_date DESC"
+                    + "ORDER BY TK.train_date "
     if(mode is 'future'):
         q2 = "AND (TK.train_date > %s "\
             + "OR (TK.train_date = %s AND TRfrom.dep_time > %s )) "
+        ticket_query = q1 + q2 + q3
     else:
         q2 = "AND (TK.train_date < %s "\
             + "OR (TK.train_date = %s AND TRfrom.dep_time < %s )) "
-    ticket_query = q1 + q2 + q3
+        ticket_query = q1 + q2 + q3 + " DESC"
+    
     ticket_results = query_db(ticket_query.format(user_id_in), [date_now, date_now, clock_now])  # 
     for ticket_result in ticket_results:
         cur_day = ticket_result["train_date"]
