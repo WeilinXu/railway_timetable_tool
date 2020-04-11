@@ -29,7 +29,8 @@
         </td>
         <td> 
                 <p>
-                    {{ticket.quantity}} Tickets <br> 
+                    <span id="num_tickets">{{ticket.quantity}}</span> 
+                    <span id="ticket_text"> Tickets</span> <br> 
                     {{ticket.price}} Yuan 
                 </p>
         </td>
@@ -39,5 +40,14 @@
     </tr>
     {% endfor %}
 </table>
-
+<script>
+$(document).ready(function(){
+    if(parseInt($("#num_tickets").text()) == 1){
+        $("#ticket_text").text("Ticket")
+    }
+    else{
+        $("#ticket_text").text("Tickets")
+    }
+});
+</script>
 {% endblock %}
