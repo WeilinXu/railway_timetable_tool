@@ -69,24 +69,59 @@ def get_station_query(station_in, date_in):
 #  station_from, station_to, dep_time, dep_day, arr_time, arr_day, TRto_id, TRfrom_id,
 # train_link, day_str, time_delta]
 def get_train_query(depart_in, dest_in, date_in):
-    train_query = "SELECT Sfrom.station_name AS station_depart, Sto.station_name AS station_dest," \
-                        + "Sfrom.id AS station_depart_id, Sto.id AS station_dest_id," \
-                        + "T.id AS train_record_id, T.train_number AS train_number," \
-                        + "S1.station_name AS station_from, S2.station_name AS station_to, " \
+    group_from = stations.objects.filter(station_name = depart_in)
+    group_to = stations.objects.filter(station_name = dest_in)
+    if(not group_from or not group_to):
+        return {}
+    if(group_from[0].group_city_id == group_to[0].group_city_id):   # corner case
+        train_query = "SELECT Sfrom.station_name AS station_depart, Sto.station_name AS station_dest," \
+                        + "Sfrom.id AS station_depart_id, Sto.id AS station_dest_id, " \
+                        + "T.id AS train_record_id, T.train_number AS train_number, " \
                         + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, " \
                         + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
                         + "TRto.id AS TRto_id, TRfrom.id AS TRfrom_id " \
                     + "FROM timetable_tool_stations Sfrom, timetable_tool_stations Sto, timetable_tool_stop_records TRfrom, " \
-                        + "timetable_tool_stop_records TRto, timetable_tool_train_records T, " \
-                        + "timetable_tool_stations S1, timetable_tool_stations S2 " \
+                        + "timetable_tool_stop_records TRto, timetable_tool_train_records T " \
                     + "WHERE Sfrom.station_name = %s " \
                         + "AND Sto.station_name = %s " \
                         + "AND Sfrom.id = TRfrom.station_id AND Sto.id = TRto.station_id " \
                         + "AND TRfrom.station_no < TRto.station_no AND TRfrom.train_record_id = TRto.train_record_id " \
                         + "AND TRfrom.train_record_id = T.id " \
-                        + "AND T.train_from_id = S1.id AND T.train_to_id = S2.id " \
                     + "ORDER BY T.train_number"
-    train_results = query_db(train_query, [depart_in, dest_in])
+        train_results = query_db(train_query, [depart_in, dest_in])
+    else:
+        train_query = "SELECT Sfrom.station_name AS station_depart, Sto.station_name AS station_dest," \
+                            + "Sfrom.id AS station_depart_id, Sto.id AS station_dest_id," \
+                            + "T.id AS train_record_id, T.train_number AS train_number, " \
+                            + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, " \
+                            + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
+                            + "TRto.id AS TRto_id, TRfrom.id AS TRfrom_id " \
+                        + "FROM timetable_tool_stations Sfrom, timetable_tool_stations Sto, timetable_tool_stop_records TRfrom, " \
+                            + "timetable_tool_stop_records TRto, timetable_tool_train_records T " \
+                        + "WHERE Sfrom.group_city_id = {} " \
+                            + "AND Sto.group_city_id = {} " \
+                            + "AND Sfrom.id = TRfrom.station_id AND Sto.id = TRto.station_id " \
+                            + "AND TRfrom.station_no < TRto.station_no AND TRfrom.train_record_id = TRto.train_record_id " \
+                            + "AND TRfrom.train_record_id = T.id " \
+                        + "ORDER BY T.train_number, Sfrom.station_name, Sto.station_name"
+        train_results = query_db(train_query.format(group_from[0].group_city_id, group_to[0].group_city_id), [])
+        # remove duplicated results
+        idx_keep = []
+        for idx in range(len(train_results)):
+            if(len(idx_keep) is 0 or train_results[idx]["train_record_id"] is not \
+                    train_results[idx_keep[-1]]["train_record_id"]):
+                idx_keep.append(idx)
+                is_dep = (train_results[idx]["station_depart"] == depart_in)
+                is_arr = (train_results[idx]["station_dest"] == dest_in)
+            elif(not is_dep or not is_arr):
+                is_dep_cur = (train_results[idx]["station_depart"] == depart_in)
+                is_arr_cur = (train_results[idx]["station_dest"] == dest_in)
+                if((is_dep_cur and not is_dep) or (is_dep_cur and is_arr_cur and not is_arr)):
+                    is_dep = is_dep_cur
+                    is_arr = is_arr_cur
+                    idx_keep[-1] = idx
+        train_results = [ train_results[i] for i in idx_keep]
+    
     cur_day = datetime.datetime.strptime(date_in, '%Y-%m-%d')
     for train_result in train_results:
         train_result["train_link"] = replace_from_dash(train_result["train_number"])

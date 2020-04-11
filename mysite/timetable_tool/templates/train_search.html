@@ -12,7 +12,7 @@
 
 <table>
     <tr> 
-        <th> No. </th> <th>Depart.</th> <th>Dest.</th> <th> From </th> <th> To </th> 
+        <th> No. </th> <th>Depart.</th> <th>Dest.</th> 
          <th>Arrive Time</th> <th>Depart Time</th> <th> Time Length </th> 
          <th> Seats </th> <th>  </th>
     </tr>
@@ -22,8 +22,6 @@
         <td> <a href="{% url 'timetable_tool:route_search2' train.train_link date_input%}">{{train.train_number }}</a> </td>
         <td>{{ train.station_depart }} </td>
         <td>{{ train.station_dest}}</td>
-        <td>{{ train.station_from }} </td>
-        <td>{{ train.station_to}}</td>
         <td>{{ train.dep_time}} </td>
         <td>{{ train.arr_time}} {{train.day_str}}</td>
         <td> {{train.time_delta}} </td>
