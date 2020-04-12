@@ -3,15 +3,17 @@
 {% block content %}
 <h3 class = "my_h3"> My Tickets </h3> 
 <p> <br> </p>
-<form action="" method="post">{% csrf_token %}
+<form>{% csrf_token %}
     <input class="btn btn_search"  type="submit" name="future" value="Future Reservations">
     <input class="btn btn_search"  type="submit" name="history" value="Historical Tickets">
 </form>
 <p> <br> </p>
 {% if can_cancel %}
-<p  class = "p_info"> <b>Future Reservation</b></p> 
+    <p  class = "p_info"> <b>Future Reservation</b></p> 
+{% elif empty_form %}
+    <p> <br> </p>
 {% else %}
-<p  class = "p_info"> <b>Historical Tickets</b></p> 
+    <p  class = "p_info"> <b>Historical Tickets</b></p> 
 {% endif %}
 <table>
     <tr> 

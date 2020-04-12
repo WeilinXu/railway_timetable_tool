@@ -111,31 +111,32 @@ class TicketListView(LoginRequiredMixin, View):
     template = 'ticket_list.html'  # 'order_system.html'
     
     def get(self,request):
-        context = {}
-        return render(request, self.template, context=context)
-     
-    def post(self,request):
-        context = {}
-        if 'future' in request.POST or 'history' in request.POST:
-            if('future' in request.POST):
-                user_tickets = get_ticket_bought(self.request.user.id, 'future')
-                can_cancel = True
-            else:
+        strval1 =  request.GET.get("future", False)
+        if strval1:
+            user_tickets = get_ticket_bought(self.request.user.id, 'future')
+            can_cancel = True
+        else:
+            strval2 =  request.GET.get("history", False)
+            if strval2:
                 user_tickets = get_ticket_bought(self.request.user.id, 'history')
                 can_cancel = False
-            request.session['my_tickets'] = {}
-            for user_ticket in user_tickets:
-                request.session['my_tickets'][user_ticket["ticket_id"]] = \
-                        {"station_from": user_ticket["station_from"], \
-                        "station_to": user_ticket["station_to"], \
-                        "train_number": user_ticket["train_number"], \
-                        "depart_date": str(user_ticket["train_date"]), \
-                        "depart_time": str(user_ticket['dep_time']),\
-                        "price": user_ticket['price'],\
-                        "quantity": user_ticket['quantity'],}
-            context = {"tickets": user_tickets, "can_cancel": can_cancel}
+            else:
+                context = {"empty_form": True}
+                return render(request, self.template, context=context)
+        
+        request.session['my_tickets'] = {}
+        for user_ticket in user_tickets:
+            request.session['my_tickets'][user_ticket["ticket_id"]] = \
+                    {"station_from": user_ticket["station_from"], \
+                    "station_to": user_ticket["station_to"], \
+                    "train_number": user_ticket["train_number"], \
+                    "depart_date": str(user_ticket["train_date"]), \
+                    "depart_time": str(user_ticket['dep_time']),\
+                    "price": user_ticket['price'],\
+                    "quantity": user_ticket['quantity'],}
+        context = {"tickets": user_tickets, "can_cancel": can_cancel}
         return render(request, self.template, context=context)
-
+                
 
 class TicketBuyView(LoginRequiredMixin, View):
     template = 'ticket_buy.html'
