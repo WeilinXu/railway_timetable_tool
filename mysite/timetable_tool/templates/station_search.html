@@ -1,24 +1,27 @@
 {% extends "base_menu.html" %}
 {% block content %}
-<h3> Station Search </h3> 
-
+<h3  class = "my_h3"> Station Search </h3> 
+<p> <br> </p>
 <form>
 {% csrf_token %}
 {{station_form}}
-<input class="btn" type="submit" name="submit" value="Search">
+<input class="btn btn_search" type="submit" name="submit" value="Search">
 </form>
-<p>Routes for <b>{{station_input}}</b> on <b>{{date_input}}</b></p> 
-
+{% if routes %}
+<p  class = "p_info">Routes for <b>{{station_input}}</b> on <b>{{date_input}}</b></p> 
+{% else %}
+<p> <br> </p>
+{% endif %}
 <table id="station_table">
     <tr>
         <th>No. </th> <th>Station</th> <th>From</th> <th>To</th> 
         <th>Arrive Time
-            <button id = 'arr_up1' type="button" class="btn"  onclick="sortTableStation(0)">&#9653</button> 
-            <button id = 'arr_down1' type="button" class="btn"  onclick="sortTableStation(1)">&#9663</button>  
+            <button id = 'arr_up1' type="button" class="btn btn_small"  onclick="sortTableStation(0)">&#9653</button> 
+            <button id = 'arr_down1' type="button" class="btn btn_small"  onclick="sortTableStation(1)">&#9663</button>  
         </th> 
         <th>Depart Time
-            <button id = 'dep_up1' type="button" class="btn"  onclick="sortTableStation(2)">&#9653</button> 
-            <button id = 'dep_down1' type="button" class="btn"  onclick="sortTableStation(3)">&#9663</button> 
+            <button id = 'dep_up1' type="button" class="btn btn_small"  onclick="sortTableStation(2)">&#9653</button> 
+            <button id = 'dep_down1' type="button" class="btn btn_small"  onclick="sortTableStation(3)">&#9663</button> 
         </th>
     </tr>
     {% for route in routes %}

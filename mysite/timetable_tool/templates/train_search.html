@@ -1,30 +1,33 @@
 {% extends "base_menu.html" %}
 
 {% block content %}
-<h3> Station to Station  Search </h3> 
-
+<h3 class = "my_h3"> Book Tickets </h3> 
+<p> <br> </p>
 <form>
 {% csrf_token %}
 {{train_form}}
-<input class="btn" type="submit" name="submit" value="Search">
-<input type="button" onclick="swap_input()" value="Swap">
+<input class="btn btn_search" type="submit" name="submit" value="Search">
+<input class="btn" type="button" onclick="swap_input()" value="&#8646">
 </form>
-<p>Trains from <b>{{depart_input}}</b> to <b>{{dest_input}}</b> on <b>{{date_input}}</b></p> 
-
+{% if trains %}
+<p class = "p_info">Trains from <b>{{depart_input}}</b> to <b>{{dest_input}}</b> on <b>{{date_input}}</b></p> 
+{% else %}
+<p> <br> </p>
+{% endif %}
 <table id = "train_table">
     <tr> 
-        <th> No. </th> <th>Depart.</th> <th>Dest.</th> 
+        <th> Train No. </th> <th>Depart.</th> <th>Dest.</th> 
         <th>Arrive Time
-            <button id = 'arr_up' type="button" class="btn"  onclick="sortTableTrain(0)">&#9653</button> 
-            <button id = 'arr_down' type="button" class="btn"  onclick="sortTableTrain(1)">&#9663</button> 
+            <button id = 'arr_up' type="button" class="btn btn_small"  onclick="sortTableTrain(0)">&#9653</button> 
+            <button id = 'arr_down' type="button" class="btn btn_small"  onclick="sortTableTrain(1)">&#9663</button> 
         </th> 
          <th>Depart Time
-            <button id = 'dep_up' type="button" class="btn"  onclick="sortTableTrain(2)">&#9653</button> 
-            <button id = 'dep_down' type="button" class="btn"  onclick="sortTableTrain(3)">&#9663</button> 
+            <button id = 'dep_up' type="button" class="btn btn_small"  onclick="sortTableTrain(2)">&#9653</button> 
+            <button id = 'dep_down' type="button" class="btn btn_small"  onclick="sortTableTrain(3)">&#9663</button> 
         </th> 
          <th> Time Length
-            <button id = 't_up' type="button" class="btn"  onclick="sortTableTrain(4)">&#9653</button> 
-            <button id = 't_down' type="button" class="btn"  onclick="sortTableTrain(5)">&#9663</button> 
+            <button id = 't_up' type="button" class="btn btn_small"  onclick="sortTableTrain(4)">&#9653</button> 
+            <button id = 't_down' type="button" class="btn btn_small"  onclick="sortTableTrain(5)">&#9663</button> 
         </th> 
          <th> Seats </th> <th> Price (Yuan) </th> <th>  </th>
     </tr>

@@ -11,7 +11,7 @@
     <ul class="nav navbar-nav">
         {% url 'timetable_tool:train_search' as ts %}
         <li {% if request.get_full_path == ts %}class="active"{% endif %}>
-            <a href="{% url 'timetable_tool:train_search'  %}">Train Search</a></li>
+            <a href="{% url 'timetable_tool:train_search'  %}">Book Tickets</a></li>
 
         {% url 'timetable_tool:route_search' as rs %}
         <li {% if request.get_full_path == rs %}class="active"{% endif %}>

@@ -87,3 +87,10 @@ function sortTable(table_id, n, is_asc){
         } 
     }
 }
+
+$(document).ready(function()
+{
+  $("tr:odd").css({
+    "background-color":"#FFF",
+    "color":"#000"});
+});

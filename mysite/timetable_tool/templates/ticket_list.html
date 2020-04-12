@@ -1,33 +1,40 @@
 {% extends "base_menu.html" %}
 
 {% block content %}
-<h3> My Tickets </h3> 
+<h3 class = "my_h3"> My Tickets </h3> 
+<p> <br> </p>
 <form action="" method="post">{% csrf_token %}
-    <input class="btn" type="submit" name="future" value="Future Reservations">
-    <input class="btn" type="submit" name="history" value="Historical Tickets">
+    <input class="btn btn_search"  type="submit" name="future" value="Future Reservations">
+    <input class="btn btn_search"  type="submit" name="history" value="Historical Tickets">
 </form>
-
+<p> <br> </p>
+{% if can_cancel %}
+<p  class = "p_info"> <b>Future Reservation</b></p> 
+{% else %}
+<p  class = "p_info"> <b>Historical Tickets</b></p> 
+{% endif %}
 <table>
     <tr> 
         <th> Ticket No. </th> <th>Trian No. </th> <th> Departure </th> <th> Arrival </th>
-        <th> Cost </th> <th> Operation </th>
+        <th> Seat Number </th> <th> Cost </th> <th> Operation </th>
     </tr>
     {% for ticket in tickets %}
     <tr>
         <td>{{ ticket.ticket_id }} </td>
         <td> <a href="{% url 'timetable_tool:route_search2' ticket.train_link ticket.train_date_str %}">{{ticket.train_number }}</a> </td>
         <td>
-            <p>
-                {{ ticket.station_from}} <br>
+            <p class = "mid_info">
+                <span class = "mid_info_bold">{{ ticket.station_from}} </span> <br>
                 {{ ticket.dep_datetime | date:"h:i a M-d-Y"}}
             </p>
         </td>
         <td>
-            <p>
-                {{ ticket.station_to }} <br>
+            <p class = "mid_info">
+                    <span class = "mid_info_bold">{{ ticket.station_to }} </span>  <br>
                 {{ ticket.arr_datetime | date:"h:i a M-d-Y"}}
             </p>
         </td>
+        <td> {{ticket.seat_number}}</td>
         <td> 
                 <p>
                     <span id="num_tickets">{{ticket.quantity}}</span> 

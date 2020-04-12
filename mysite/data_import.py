@@ -95,6 +95,7 @@ def parse_data(filepath_read, filepath_write, station2id):
         items = line_r[:-1].split()
         if(len(items) is 1):
             train_nums = items[0]
+            print(train_nums)
             continue
         
         if(len(items) is 5):

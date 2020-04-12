@@ -161,6 +161,7 @@ def get_ticket_bought(user_id_in, mode = 'future'):
     date_now = datetime_now.strftime("%Y-%m-%d")
     clock_now = datetime_now.strftime("%H:%M")
     q1 = "SELECT TKS.id AS ticket_id, TK.train_date AS train_date, " \
+                    + "TKS.seat_number AS seat_number, "\
                     + "TKS.quantity AS quantity, TKS.price AS price, "\
                     + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, "\
                     + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
