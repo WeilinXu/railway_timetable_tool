@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib import messages
 from django.views import View
-
+from django.db.models import Q
 
 from timetable_tool.models import stations, train_records, stop_records, tickets, tickets_sold
 from timetable_tool.forms import RouteForm, StationForm, TrainForm
@@ -224,7 +224,7 @@ class TicketCancelView(LoginRequiredMixin, View):
 def station_autocomplete(request):  # get_town
     if request.is_ajax():
         q = request.GET.get('term', '')
-        stations_down = stations.objects.filter(station_name__startswith = q)
+        stations_down = stations.objects.filter(Q(station_name__startswith = q))
         results = []
         for station_down in stations_down:
             name_json = station_down.station_name   # name
@@ -235,7 +235,7 @@ def station_autocomplete(request):  # get_town
 def route_autocomplete(request):  # get_town
     if request.is_ajax():
         q = request.GET.get('term', '')
-        routes_down = train_records.objects.filter(train_number__startswith = q)
+        routes_down = train_records.objects.filter(Q(train_number__startswith = q))
         results = []
         for route_down in routes_down:
             name_json = route_down.train_number   # name

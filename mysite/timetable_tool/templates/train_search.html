@@ -17,11 +17,11 @@
 <table id = "train_table">
     <tr> 
         <th> Train No. </th> <th>Depart.</th> <th>Dest.</th> 
-        <th>Arrive Time
+        <th>Depart Time
             <button id = 'arr_up' type="button" class="btn btn_small"  onclick="sortTableTrain(0)">&#9653</button> 
             <button id = 'arr_down' type="button" class="btn btn_small"  onclick="sortTableTrain(1)">&#9663</button> 
         </th> 
-         <th>Depart Time
+         <th>Arrive Time
             <button id = 'dep_up' type="button" class="btn btn_small"  onclick="sortTableTrain(2)">&#9653</button> 
             <button id = 'dep_down' type="button" class="btn btn_small"  onclick="sortTableTrain(3)">&#9663</button> 
         </th> 
@@ -83,6 +83,7 @@ function sortTableTrain(button_idx) {
     var n = Math.floor(button_idx / 2) + 3;
     var table_id = "train_table";
     sortTable(table_id, n, is_asc);
+    display_after_sort();
 }
 
 jQuery(function() {
@@ -124,5 +125,6 @@ jQuery(function() {
         });        
     });
 });
+
 </script>
 {% endblock %}

@@ -94,3 +94,12 @@ $(document).ready(function()
     "background-color":"#FFF",
     "color":"#000"});
 });
+
+function display_after_sort(){
+    $("tr:odd").css({
+        "background-color":"#FFF",
+        "color":"#000"});
+    $("tr:even").css({
+        "background-color":"rgb(224, 239, 245)",
+        "color":"#000"});
+}

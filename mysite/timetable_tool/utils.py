@@ -1,6 +1,7 @@
 from django.db import connection, transaction
 import datetime
 from timetable_tool.models import tickets, stations, train_records, stop_records
+from django.db.models import Q
 
 def query_db(query, args=(), one=False, commit=False):
     cursor = connection.cursor()
@@ -33,6 +34,17 @@ def valid_date(date_in):
    
 
 def get_route_query(route_in, date_in):
+    route_in_real = train_records.objects.filter(train_number = route_in)
+    if(not route_in_real):
+        route_in1 = route_in + '/'
+        route_in2 = '/' + route_in
+        route_in_real = train_records.objects.filter(Q(train_number__contains = route_in1)| \
+                        Q(train_number__contains = route_in2))
+        if(not route_in_real):
+            return {}
+    route_in_real = route_in_real[0].train_number
+    print(route_in_real)
+
     route_query = "SELECT S.id AS station_id, S.station_name AS station_name, " \
                         + "T.id AS train_record_id, TR.station_no AS station_no, " \
                         + "TR.arr_time AS arr_time, TR.arr_day AS arr_day, " \
@@ -41,7 +53,8 @@ def get_route_query(route_in, date_in):
                     + "WHERE T.id = TR.train_record_id AND S.id = TR.station_id "\
                         + "AND T.train_number = %s "  \
                     + " ORDER BY station_no" 
-    route_results = query_db(route_query, args = [route_in])
+    
+    route_results = query_db(route_query, args = [route_in_real])
     for route_result in route_results:
         route_result["arr_day"] = route_result["arr_day"] + 1
     return route_results
