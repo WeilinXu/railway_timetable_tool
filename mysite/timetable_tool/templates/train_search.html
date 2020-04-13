@@ -1,7 +1,7 @@
 {% extends "base_menu.html" %}
-
+{% load i18n %}
 {% block content %}
-<h3 class = "my_h3"> Book Tickets </h3> 
+<h3 class = "my_h3"> {% trans "Book Tickets" %} </h3> 
 <p> <br> </p>
 <form>
 {% csrf_token %}
@@ -16,20 +16,22 @@
 {% endif %}
 <table id = "train_table">
     <tr> 
-        <th> Train No. </th> <th>Depart.</th> <th>Dest.</th> 
-        <th>Depart Time
+        <th> {%trans "Train No." %} </th> 
+        <th>{% trans "Depart. Station" %} </th> <th>{% trans "Dest. Station" %}</th> 
+        <th>{% trans "Depart Time" %}
             <button id = 'arr_up' type="button" class="btn btn_small"  onclick="sortTableTrain(0)">&#9653</button> 
             <button id = 'arr_down' type="button" class="btn btn_small"  onclick="sortTableTrain(1)">&#9663</button> 
         </th> 
-         <th>Arrive Time
+         <th>{% trans "Arrive Time" %}
             <button id = 'dep_up' type="button" class="btn btn_small"  onclick="sortTableTrain(2)">&#9653</button> 
             <button id = 'dep_down' type="button" class="btn btn_small"  onclick="sortTableTrain(3)">&#9663</button> 
         </th> 
-         <th> Time Length
+         <th> {% trans "Time Length" %}
             <button id = 't_up' type="button" class="btn btn_small"  onclick="sortTableTrain(4)">&#9653</button> 
             <button id = 't_down' type="button" class="btn btn_small"  onclick="sortTableTrain(5)">&#9663</button> 
         </th> 
-         <th> Seats </th> <th> Price (Yuan) </th> <th>  </th>
+         <th> {% trans "Seats" %} </th> 
+         <th> {% trans "Price (Yuan)" %} </th> <th>  </th>
     </tr>
     {% for train in trains %}
     <tr>

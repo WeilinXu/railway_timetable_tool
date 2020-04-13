@@ -1,0 +1,145 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-04-13 19:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: home/templates/base_menu.html:14
+#: timetable_tool/templates/train_search.html:4
+msgid "Book Tickets"
+msgstr "火车票"
+
+#: home/templates/base_menu.html:18
+#: timetable_tool/templates/route_search.html:4
+msgid "Route Search"
+msgstr "车次查询"
+
+#: home/templates/base_menu.html:22
+#: timetable_tool/templates/station_search.html:4
+msgid "Station Search"
+msgstr "车站车次查询"
+
+#: home/templates/base_menu.html:28 timetable_tool/templates/ticket_list.html:4
+msgid "My Tickets"
+msgstr "火车票"
+
+#: home/templates/base_menu.html:34
+msgid "Logout"
+msgstr "登出"
+
+#: home/templates/base_menu.html:39
+msgid "Login"
+msgstr "登录"
+
+#: home/templates/base_menu.html:42
+msgid "Sign up"
+msgstr "注册"
+
+#: timetable_tool/templates/route_search.html:18
+msgid "Stop No."
+msgstr "站序"
+
+#: timetable_tool/templates/route_search.html:18
+#: timetable_tool/templates/station_search.html:18
+msgid "Station"
+msgstr "车站"
+
+#: timetable_tool/templates/route_search.html:19
+#: timetable_tool/templates/station_search.html:20
+#: timetable_tool/templates/train_search.html:25
+msgid "Arrive Time"
+msgstr "到达时间"
+
+#: timetable_tool/templates/route_search.html:19
+#: timetable_tool/templates/station_search.html:24
+#: timetable_tool/templates/train_search.html:21
+msgid "Depart Time"
+msgstr "出发时间"
+
+#: timetable_tool/templates/route_search.html:20
+msgid "Day"
+msgstr "天数"
+
+#: timetable_tool/templates/route_search.html:20
+msgid "Distance (km)"
+msgstr "里程 (公里)"
+
+#: timetable_tool/templates/station_search.html:18
+#: timetable_tool/templates/ticket_list.html:20
+#: timetable_tool/templates/train_search.html:19
+msgid "Train No."
+msgstr "车次"
+
+#: timetable_tool/templates/station_search.html:19
+msgid "From"
+msgstr "始发站"
+
+#: timetable_tool/templates/station_search.html:19
+msgid "To"
+msgstr "终到站"
+
+#: timetable_tool/templates/ticket_list.html:12
+msgid "Future Reservation"
+msgstr "预定订单"
+
+#: timetable_tool/templates/ticket_list.html:16
+msgid "Historical Tickets"
+msgstr "历史订单"
+
+#: timetable_tool/templates/ticket_list.html:20
+msgid "Ticket No."
+msgstr "车票号"
+
+#: timetable_tool/templates/ticket_list.html:21
+msgid "Departure Info"
+msgstr "出发信息"
+
+#: timetable_tool/templates/ticket_list.html:21
+msgid "Arrival Info"
+msgstr "到达信息"
+
+#: timetable_tool/templates/ticket_list.html:22
+msgid "Seat Number"
+msgstr "座位数"
+
+#: timetable_tool/templates/ticket_list.html:22
+msgid "Operation"
+msgstr "操作"
+
+#: timetable_tool/templates/ticket_list.html:50
+msgid "Cancel Ticket"
+msgstr "退票"
+
+#: timetable_tool/templates/train_search.html:20
+msgid "Depart. Station"
+msgstr "出发站"
+
+#: timetable_tool/templates/train_search.html:20
+msgid "Dest. Station"
+msgstr "到达站"
+
+#: timetable_tool/templates/train_search.html:29
+msgid "Time Length"
+msgstr "历时"
+
+#: timetable_tool/templates/train_search.html:33
+msgid "Seats"
+msgstr "余票数"
+
+#: timetable_tool/templates/train_search.html:34
+msgid "Price (Yuan)"
+msgstr "票价(元)"

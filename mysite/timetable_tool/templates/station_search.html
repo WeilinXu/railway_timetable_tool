@@ -1,6 +1,7 @@
 {% extends "base_menu.html" %}
+{% load i18n %}
 {% block content %}
-<h3  class = "my_h3"> Station Search </h3> 
+<h3  class = "my_h3"> {% trans "Station Search" %} </h3> 
 <p> <br> </p>
 <form>
 {% csrf_token %}
@@ -14,12 +15,13 @@
 {% endif %}
 <table id="station_table">
     <tr>
-        <th>No. </th> <th>Station</th> <th>From</th> <th>To</th> 
-        <th>Arrive Time
+        <th>{%trans "Train No." %}</th> <th>{% trans "Station"%} </th> 
+        <th>{% trans "From" %}</th> <th>{% trans "To"%}</th> 
+        <th>{% trans "Arrive Time" %}
             <button id = 'arr_up1' type="button" class="btn btn_small"  onclick="sortTableStation(0)">&#9653</button> 
             <button id = 'arr_down1' type="button" class="btn btn_small"  onclick="sortTableStation(1)">&#9663</button>  
         </th> 
-        <th>Depart Time
+        <th>{% trans "Depart Time" %}
             <button id = 'dep_up1' type="button" class="btn btn_small"  onclick="sortTableStation(2)">&#9653</button> 
             <button id = 'dep_down1' type="button" class="btn btn_small"  onclick="sortTableStation(3)">&#9663</button> 
         </th>

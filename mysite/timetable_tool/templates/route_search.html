@@ -1,7 +1,7 @@
 {% extends "base_menu.html" %}
-
+{% load i18n %}
 {% block content %}
-<h3  class = "my_h3"> Route Search </h3> 
+<h3  class = "my_h3"> {% trans "Route Search" %} </h3> 
 <p> <br> </p>
 <form>
 {% csrf_token %}
@@ -15,8 +15,9 @@
 {% endif %}
 <table>
     <tr>
-        <th> Stop No. </th> <th style="text-align:center"> Station </th> <th>Arrive Time</th> 
-        <th>Depart Time</th> <th>Day</th> <th> Distance (km) </th> 
+        <th> {% trans "Stop No." %}</th> <th style="text-align:center"> {% trans "Station" %} </th> 
+        <th>{% trans "Arrive Time" %}</th>  <th>{% trans "Depart Time" %}</th> 
+        <th>{% trans "Day" %}</th> <th> {% trans "Distance (km)" %} </th> 
     </tr>
     {% for stop in stops %}
     <tr>

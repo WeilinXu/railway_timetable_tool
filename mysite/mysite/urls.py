@@ -21,27 +21,28 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.views.static import serve
 from django.views.generic import TemplateView
-
+from django.conf.urls.i18n import i18n_patterns # ADD: translation
 
 # Up two folders to serve "site" content
-urlpatterns = [
+urlpatterns = i18n_patterns(  # ADD: translation
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='home/main.html')),
     path('', include('home.urls')),
     path('timetable_tool/', include('timetable_tool.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     url(r'^oauth/', include('social_django.urls', namespace='social')),  # Keep
-]
+    url(r'^i18n/',include('django.conf.urls.i18n')),
+)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE_ROOT = os.path.join(BASE_DIR, 'site')
 # NOTE: change SITE_ROOT to BASE_DIR
-urlpatterns += [
+urlpatterns += i18n_patterns(   # ADD: translation
     url(r'^site/(?P<path>.*)$', serve,
         {'document_root': SITE_ROOT, 'show_indexes': True},
         name='site_path'
     ),
-]
+)
 
 # Serve the favicon - Keep for later
 urlpatterns += [
