@@ -92,6 +92,7 @@ def get_train_query(depart_in, dest_in, date_in):
                         + "T.id AS train_record_id, T.train_number AS train_number, " \
                         + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, " \
                         + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
+                        + "TRfrom.km AS km_from, TRto.km AS km_to, "\
                         + "TRto.id AS TRto_id, TRfrom.id AS TRfrom_id " \
                     + "FROM timetable_tool_stations Sfrom, timetable_tool_stations Sto, timetable_tool_stop_records TRfrom, " \
                         + "timetable_tool_stop_records TRto, timetable_tool_train_records T " \
