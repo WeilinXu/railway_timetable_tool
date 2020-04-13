@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-13 19:53+0000\n"
+"POT-Creation-Date: 2020-04-13 22:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,6 +48,10 @@ msgstr "登录"
 #: home/templates/base_menu.html:42
 msgid "Sign up"
 msgstr "注册"
+
+#: home/templates/base_menu.html:61
+msgid "Go"
+msgstr "切换语言"
 
 #: timetable_tool/templates/route_search.html:18
 msgid "Stop No."

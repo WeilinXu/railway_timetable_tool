@@ -30,19 +30,20 @@ urlpatterns = i18n_patterns(  # ADD: translation
     path('', include('home.urls')),
     path('timetable_tool/', include('timetable_tool.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-    url(r'^oauth/', include('social_django.urls', namespace='social')),  # Keep
-    url(r'^i18n/',include('django.conf.urls.i18n')),
 )
+urlpatterns += [
+    url(r'^oauth/', include('social_django.urls', namespace='social')),  # Keep
+    url(r'^i18n/',include('django.conf.urls.i18n')),]
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE_ROOT = os.path.join(BASE_DIR, 'site')
 # NOTE: change SITE_ROOT to BASE_DIR
-urlpatterns += i18n_patterns(   # ADD: translation
+urlpatterns += [
     url(r'^site/(?P<path>.*)$', serve,
         {'document_root': SITE_ROOT, 'show_indexes': True},
         name='site_path'
     ),
-)
+]
 
 # Serve the favicon - Keep for later
 urlpatterns += [
@@ -52,7 +53,6 @@ urlpatterns += [
         }
     ),
 ]
-
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 urlpatterns += staticfiles_urlpatterns()
@@ -61,9 +61,7 @@ urlpatterns += staticfiles_urlpatterns()
 try:
     from . import github_settings
     social_login = 'registration/login_social.html'
-    urlpatterns.insert(0,
-        path('accounts/login/', auth_views.LoginView.as_view(template_name=social_login))
-    )
+    urlpatterns = i18n_patterns(path('accounts/login/', auth_views.LoginView.as_view(template_name=social_login)),) + urlpatterns
     print('Using',social_login,'as the login template')
 except:
     print('Using registration/login.html as the login template')

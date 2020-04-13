@@ -62,6 +62,7 @@ python manage.py migrate --run-syncdb
 
 and migrate data by:
 ```
+python data_import.py
 python manage.py makemigrations
 python manage.py migrate
 ```
@@ -70,6 +71,24 @@ which can be simplified by (in `railway_timetable_tool`):
 ```
 ./bin/timetabledb reset
 ```
+## Translation
+Refer to [tutorial](https://www.jianshu.com/p/bc3ada1b2ba1) and [trouble-shooting](https://stackoverflow.com/questions/2328185/django-i18n-common-causes-for-translations-not-appearing):
+
+Use `i18n_patterns` in `mysite/urls.py`.
+
+In `mysite/settings.py`: 
+
+add `'django.middleware.locale.LocaleMiddleware'` to `MIDDLEWARE`; add `LOCALE_PATHS`.
+
+Run `python manage.py makemessages -l zh_Hans` in `railway_timetable_tool/` folder.
+
+Then, the file `zh_Hans/LC_MESSAGES/django.po` are generated in `railway_timetable_tool/mysite/locale/` folder. Add translations in this file.
+
+In folder `railway_timetable_tool/mysite`, run:
+```
+django-admin compilemessages
+```
+
 ## Run
 In `railway_timetable_tool/mysite/`:
 ```

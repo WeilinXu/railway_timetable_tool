@@ -58,7 +58,8 @@
                 </option>
             {% endfor %}
         </select>
-        <input type="submit" value="Go" />
+        {% trans "Go" as go_val %}
+        <input type="submit" value="{{go_val}}" />
     </form>
 </div>
 {% endblock %}

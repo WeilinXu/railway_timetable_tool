@@ -20,6 +20,7 @@ fi
 case $1 in
   "create")
     # mkdir -p var/uploads
+    python mysite/data_import.py
     python mysite/manage.py makemigrations
     python mysite/manage.py migrate --run-syncdb
     sqlite3 var/db.sqlite3 < sql/data.sql
@@ -35,6 +36,7 @@ case $1 in
 
   "reset")
     # rm -rf var/db.sqlite3
+    python mysite/data_import.py 
     sqlite3 var/db.sqlite3 < sql/drop_table.sql
     # mkdir -p var/uploads
     python mysite/manage.py makemigrations
