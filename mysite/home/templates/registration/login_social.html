@@ -1,17 +1,16 @@
 {% extends "base_menu.html" %}
-
+{% load i18n %}
 {% block content %}
 
 {% if form.errors %}
-  <p>Your username and password didn't match. Please try again.</p>
+  <p>{% trans "Your username and password didn't match. Please try again." %}</p>
 {% endif %}
 
 {% if next %}
   {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
+    <p>{% trans "Your account doesn't have access to this page. To proceed, please login with an account that has access." %}</p>
   {% else %}
-    <p>Please login to see this site.</p>
+    <p>{% trans "Please login to see this site." %}</p>
   {% endif %}
 {% endif %}
 
@@ -20,7 +19,8 @@
 <form method="post" action="{% url 'login' %}">
 {% csrf_token %}
 {{ form|crispy }}
-<input type="submit" class="btn btn-primary" value="Login Locally" />
+{% trans "Login Locally" as Login_Locally_str %}
+<input type="submit" class="btn btn-primary" value="{{Login_Locally_str}}" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
 
@@ -28,7 +28,7 @@
 <hr/>
 <a class="btn btn-info" role="button" href="{% url 'social:begin' 'github' %}?next={{ next }}">
     <i class="fa fa-github" aria-hidden="true"></i>
-    Login with GitHub</a>
+    {% trans "Login with GitHub" %}</a>
 {% endif %}
 
 <!-- ROOT_URLCONF {{ settings.ROOT_URLCONF }} -->

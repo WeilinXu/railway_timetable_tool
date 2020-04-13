@@ -1,9 +1,9 @@
 {% extends "base_menu.html" %}
-
+{% load i18n %}
 {% block content %}
-<h3 class = "my_h3"> Ticket Book </h3> 
+<h3 class = "my_h3"> {% trans "Place Order" %} </h3> 
 <div class = "p_ticket_info">
-    Train <span class = "large_bold">{{dep_info.train_number}}</b>: <br>
+    Train <span class = "large_bold">{{dep_info.train_number}}</span>: <br>
     Depart from <span class = "large_bold">{{dep_info.station_name}}</span> on  
     <span class = "large_bold">{{dep_date | date:"M-d-Y"}}</span> &nbsp;
     <span class = "large_bold">{{dep_info.stop_time | date:"h:i a"}}</span>, <br>

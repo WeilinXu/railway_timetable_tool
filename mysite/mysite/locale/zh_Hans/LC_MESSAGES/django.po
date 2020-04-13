@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-13 22:14+0000\n"
+"POT-Creation-Date: 2020-04-13 23:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,7 @@ msgstr "火车票"
 msgid "Logout"
 msgstr "登出"
 
-#: home/templates/base_menu.html:39
+#: home/templates/base_menu.html:39 home/templates/registration/login.html:12
 msgid "Login"
 msgstr "登录"
 
@@ -52,6 +52,37 @@ msgstr "注册"
 #: home/templates/base_menu.html:61
 msgid "Go"
 msgstr "切换语言"
+
+#: home/templates/registration/login.html:6
+#: home/templates/registration/login_social.html:6
+msgid "Your username and password didn't match. Please try again."
+msgstr "您的用户名和密码不匹配, 请重试"
+
+#: home/templates/registration/login_social.html:11
+msgid ""
+"Your account doesn't have access to this page. To proceed, please login with "
+"an account that has access."
+msgstr "您的帐户无权访问此页面"
+
+#: home/templates/registration/login_social.html:13
+msgid "Please login to see this site."
+msgstr "请登录"
+
+#: home/templates/registration/login_social.html:22
+msgid "Login Locally"
+msgstr "登录"
+
+#: home/templates/registration/login_social.html:31
+msgid "Login with GitHub"
+msgstr "GitHub登录"
+
+#: home/templates/registration/register.html:3
+msgid "Create an Account"
+msgstr "创建帐户"
+
+#: home/templates/registration/register.html:10
+msgid "Register"
+msgstr "注册"
 
 #: timetable_tool/templates/route_search.html:18
 msgid "Stop No."
@@ -95,6 +126,10 @@ msgstr "始发站"
 #: timetable_tool/templates/station_search.html:19
 msgid "To"
 msgstr "终到站"
+
+#: timetable_tool/templates/ticket_buy.html:4
+msgid "Place Order"
+msgstr "下单"
 
 #: timetable_tool/templates/ticket_list.html:12
 msgid "Future Reservation"
