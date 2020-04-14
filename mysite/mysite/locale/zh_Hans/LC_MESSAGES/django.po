@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-14 01:09+0000\n"
+"POT-Creation-Date: 2020-04-14 02:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,6 +84,28 @@ msgstr "创建帐户"
 msgid "Register"
 msgstr "注册"
 
+#: timetable_tool/forms.py:14
+msgid "Route No."
+msgstr "车次"
+
+#: timetable_tool/forms.py:16 timetable_tool/forms.py:21
+#: timetable_tool/forms.py:28
+msgid "Date"
+msgstr "出发日"
+
+#: timetable_tool/forms.py:19 timetable_tool/templates/route_search.html:19
+#: timetable_tool/templates/station_search.html:19
+msgid "Station"
+msgstr "车站"
+
+#: timetable_tool/forms.py:24
+msgid "Depart From"
+msgstr "出发地"
+
+#: timetable_tool/forms.py:26
+msgid "Go To"
+msgstr "目的地"
+
 #: timetable_tool/templates/route_search.html:9
 #: timetable_tool/templates/station_search.html:9
 #: timetable_tool/templates/train_search.html:9
@@ -98,7 +120,6 @@ msgstr "停站信息："
 #: timetable_tool/templates/station_search.html:13
 #: timetable_tool/templates/ticket_buy.html:7
 #: timetable_tool/templates/ticket_buy.html:10
-#: timetable_tool/templates/ticket_cancel.html:9
 #: timetable_tool/templates/train_search.html:14
 msgid "on"
 msgstr " "
@@ -106,11 +127,6 @@ msgstr " "
 #: timetable_tool/templates/route_search.html:19
 msgid "Stop No."
 msgstr "站序"
-
-#: timetable_tool/templates/route_search.html:19
-#: timetable_tool/templates/station_search.html:19
-msgid "Station"
-msgstr "车站"
 
 #: timetable_tool/templates/route_search.html:20
 #: timetable_tool/templates/station_search.html:21
@@ -133,7 +149,6 @@ msgid "Distance (km)"
 msgstr "里程 (公里)"
 
 #: timetable_tool/templates/station_search.html:13
-#| msgid "Route Search"
 msgid "Routes for"
 msgstr "车站车次："
 
@@ -173,7 +188,7 @@ msgid "Price"
 msgstr "价格"
 
 #: timetable_tool/templates/ticket_buy.html:13
-#: timetable_tool/templates/ticket_list.html:47
+#: timetable_tool/templates/ticket_list.html:49
 msgid "Yuan"
 msgstr "元"
 
@@ -207,6 +222,10 @@ msgstr "出发"
 msgid "to"
 msgstr "到达"
 
+#: timetable_tool/templates/ticket_cancel.html:9
+msgid "depart on "
+msgstr " 出发日期："
+
 #: timetable_tool/templates/ticket_cancel.html:13
 msgid "Confirm"
 msgstr "确认"
@@ -239,12 +258,15 @@ msgstr "座位号"
 msgid "Operation"
 msgstr "操作"
 
-#: timetable_tool/templates/ticket_list.html:52
+#: timetable_tool/templates/ticket_list.html:48
+msgid "Tickets"
+msgstr "张"
+
+#: timetable_tool/templates/ticket_list.html:54
 msgid "Refund"
 msgstr "退票"
 
 #: timetable_tool/templates/train_search.html:14
-#| msgid "Train No."
 msgid "Trains from"
 msgstr "从"
 
@@ -271,3 +293,51 @@ msgstr "票价(元)"
 #: timetable_tool/templates/train_search.html:50
 msgid "Buy Ticket"
 msgstr "购票"
+
+#: timetable_tool/views.py:35 timetable_tool/views.py:65
+#: timetable_tool/views.py:93
+msgid "Error: Invalid form input"
+msgstr "无效输入！"
+
+#: timetable_tool/views.py:42 timetable_tool/views.py:70
+#: timetable_tool/views.py:101
+msgid "Error: Invalid input"
+msgstr "无效输入！"
+
+#: timetable_tool/views.py:159
+msgid "No tickets are sold!"
+msgstr "本票不发售！"
+
+#: timetable_tool/views.py:165
+msgid "You have bought this ticket!"
+msgstr "您已购买本车次车票！"
+
+#: timetable_tool/views.py:167
+msgid "Tickets are not enough!"
+msgstr "票额不足！"
+
+#: timetable_tool/views.py:169
+msgid "Success!"
+msgstr ""
+
+#: timetable_tool/views.py:195
+msgid "Ticket isn't refunded!"
+msgstr "取消退票！"
+
+#: timetable_tool/views.py:199 timetable_tool/views.py:205
+msgid "Ticket doesn't exist!"
+msgstr "车票不存在"
+
+#: timetable_tool/views.py:213
+#, python-format
+msgid ""
+"Ticket is cancelled successfully and %(money)s Yuan will return to your "
+"account!"
+msgstr "退票成功，%(money)s 元将退还您的帐户！"
+
+#: timetable_tool/views.py:215
+msgid "Past Ticket cannont be cancelled!"
+msgstr "已出发车次无法退票！"
+
+#~ msgid "Yuan will return to your account!"
+#~ msgstr "元将返还您的帐户"

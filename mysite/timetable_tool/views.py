@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.views import View
 from django.db.models import Q
 
+from django.utils.translation import ugettext_lazy as _
+
 from timetable_tool.models import stations, train_records, stop_records, tickets, tickets_sold
 from timetable_tool.forms import RouteForm, StationForm, TrainForm
 from timetable_tool.utils import *
@@ -30,14 +32,14 @@ def route_search(request, route_input = None, date_input = None):
                 route_input = route_form.cleaned_data['route_input']
                 date_input = route_form.cleaned_data['date_input']
             else:
-                messages.error(request, "Error: Invalid form input")
+                messages.error(request, _("Error: Invalid form input"))
                 return render(request, "route_search.html", context)
         elif(route_input or date_input):
             if route_input and date_input  \
                 and valid_route(route_input) and valid_date(date_input):
                 route_input = replace_to_dash(route_input)
             else:
-                messages.error(request, "Error: Invalid input")
+                messages.error(request, _("Error: Invalid input"))
                 return render(request, "route_search.html", context)
         else:
             return render(request, "route_search.html", context)
@@ -60,12 +62,12 @@ def station_search(request, station_input = None, date_input = None):
                 station_input = station_form.cleaned_data['station_input']
                 date_input = station_form.cleaned_data['date_input']
             else:
-                messages.error(request, "Error: Invalid form input")
+                messages.error(request, _("Error: Invalid form input"))
                 return render(request, "station_search.html", context)
         elif(station_input or date_input):
             if not station_input or not date_input \
                 or not valid_station(station_input) or not valid_date(date_input):
-                messages.error(request, "Error: Invalid input")
+                messages.error(request, _("Error: Invalid input"))
                 return render(request, "station_search.html", context)
         else:
             return render(request, "station_search.html", context)
@@ -88,7 +90,7 @@ def train_search(request, depart_input = None, dest_input = None, date_input = N
                 dest_input = train_form.cleaned_data['dest_input']
                 date_input = train_form.cleaned_data['date_input']
             else:
-                messages.error(request, "Error: Invalid form input")
+                messages.error(request, _("Error: Invalid form input"))
                 return render(request, "train_search.html", context)
         elif(depart_input or dest_input or date_input):
             print("3")
@@ -96,7 +98,7 @@ def train_search(request, depart_input = None, dest_input = None, date_input = N
                 or not valid_station(depart_input) or not valid_station(dest_input) \
                 or not valid_date(date_input):
                 if(depart_input or dest_input or date_input):
-                    messages.error(request, "Error: Invalid input")
+                    messages.error(request, _("Error: Invalid input"))
                 
                 return render(request, "train_search.html", context)
         else:
@@ -152,26 +154,19 @@ class TicketBuyView(LoginRequiredMixin, View):
         return render(request, self.template, ctx)
 
     def post(self, request, pk_from, pk_to, pk_date) :
-        '''
-        if not form.is_valid() :
-            print("Form not valid!")
-            messages.error(request, "Form not valid!")
-            return render(request, self.template, ctx)
-        '''
-        
         if not tickets.objects.filter(stop_from_id = pk_from, \
                     stop_to_id = pk_to, train_date = pk_date): 
-            messages.error(request, "No tickets are sold!")
+            messages.error(request, _("No tickets are sold!"))
         else:
             tickets_all = tickets.objects.get(stop_from_id = pk_from, \
                     stop_to_id = pk_to, train_date = pk_date)
             if tickets_sold.objects.filter(ticket_id = tickets_all.id, \
                     customer_id = self.request.user.id):
-                messages.error(request, "You have bought this ticket!")
+                messages.error(request, _("You have bought this ticket!"))
             elif(int(request.POST['quantity']) > tickets_all.tickets_avaliable):
-                messages.error(request, "Tickets are not enough!")
+                messages.error(request, _("Tickets are not enough!"))
             else:
-                messages.success(request, "Success!")
+                messages.success(request, _("Success!"))
                 # Add owner to the model before saving
                 quantity_in = int(request.POST['quantity'])
                 ticket_sold = tickets_sold(customer = self.request.user, \
@@ -197,17 +192,17 @@ class TicketCancelView(LoginRequiredMixin, View):
     
     def post(self, request, pk_tks):
         if "cancel" in request.POST:
-            messages.info(request, "Ticket isn't cancelled!")
+            messages.info(request, _("Ticket isn't refunded!"))
             return redirect(reverse_lazy('timetable_tool:ticket_all'))
         if not tickets_sold.objects.filter(id = pk_tks, \
             customer_id = self.request.user.id):
-            messages.error(request, "Ticket doesn't exist!")
+            messages.error(request, _("Ticket doesn't exist!"))
         else:
             ticket_cancel = tickets_sold.objects.get(id = pk_tks, \
                         customer_id = self.request.user.id)
             print(ticket_cancel.ticket_id)
             if not tickets.objects.filter(id = ticket_cancel.ticket_id):
-                messages.error(request, "Ticket doesn't exist!")
+                messages.error(request, _("Ticket doesn't exist!"))
             else:
                 tickets_all = tickets.objects.get(id = ticket_cancel.ticket_id)
                 if can_cancel(request.session['my_tickets'], pk_tks):
@@ -215,9 +210,9 @@ class TicketCancelView(LoginRequiredMixin, View):
                     money_return = ticket_cancel.price
                     tickets_all.save()
                     ticket_cancel.delete()
-                    messages.success(request, "Ticket is cancelled successfully and {} Yuan will return to your account!".format(money_return))
+                    messages.success(request, _("Ticket is cancelled successfully and %(money)s Yuan will return to your account!") % {'money': str(money_return)})
                 else:
-                    messages.error(request, "Past Ticket cannont be cancelled!")
+                    messages.error(request, _("Past Ticket cannont be cancelled!"))
         return redirect(reverse_lazy('timetable_tool:ticket_all'))
             
 

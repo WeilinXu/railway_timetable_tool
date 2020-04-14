@@ -42,8 +42,15 @@
         <td> {{ticket.seat_number}}</td>
         <td> 
                 <p>
-                    <span id="num_tickets">{{ticket.quantity}}</span> 
-                    <span id="ticket_text"> Tickets</span> <br> 
+                        <span id="num_tickets_cn">{{ticket.quantity}}</span> 
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% trans "Tickets" as ticket_tran %}
+                    {% if LANGUAGE_CODE == 'zh-hans' %}
+                        <span id="ticket_text2"> {{ticket_tran}}</span> <br> 
+                    {% else %}
+                        <span id="ticket_text"> {{ticket_tran}}</span> <br> 
+                    {% endif %}
+                    
                     {{ticket.price}} {% trans "Yuan" %} 
                 </p>
         </td>

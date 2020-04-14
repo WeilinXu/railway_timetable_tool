@@ -4,9 +4,9 @@
 <div class = "p_ticket_info">
     {% trans "Are you sure you want to cancel ticket of" %}<br>
     {% trans "Train" %}&nbsp;<span class = "large_bold">{{ticket_info.train_number}}</span><br>
-    {% trans "from" %}&nbsp;<span class = "large_bold">{{ticket_info.station_from}}</span><br>
-    {% trans "to" %}&nbsp;<span class = "large_bold">{{ticket_info.station_to}}</span>
-    {% trans "on" %}&nbsp;<span class = "large_bold">{{ticket_info.depart_date}}</span>?
+    {% trans "from" %}:&nbsp;<span class = "large_bold">{{ticket_info.station_from}}</span><br>
+    {% trans "to" %}:&nbsp;<span class = "large_bold">{{ticket_info.station_to}}</span>
+    {% trans "depart on " %}&nbsp;<span class = "large_bold">{{ticket_info.depart_date}}</span>?
 </div>
 <p> <br> </p>
 <form action="" method="post">{% csrf_token %}
