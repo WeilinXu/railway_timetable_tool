@@ -24,11 +24,12 @@
     {% for stop in stops %}
     <tr>
         <td> {{ stop.station_no }} </td>
-        <td> <a href = "{% url 'timetable_tool:station_search2' stop.station_name date_input %}">{{ stop.station_name }}</a> </td>
         {% if LANGUAGE_CODE == 'zh-hans' %}
+            <td> <a href = "{% url 'timetable_tool:station_search2' stop.station_name_cn date_input %}">{{ stop.station_name_cn }}</a> </td>
             <td>{{ stop.arr_time | date:"H:i"}}</td>
             <td>{{ stop.dep_time | date:"H:i"}}</td>
         {% else %}
+            <td> <a href = "{% url 'timetable_tool:station_search2' stop.station_name date_input %}">{{ stop.station_name }}</a> </td>
             <td>{{ stop.arr_time | date:"h:i a"}}</td>
             <td>{{ stop.dep_time | date:"h:i a"}}</td>
         {% endif %}

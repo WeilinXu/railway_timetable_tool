@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-14 02:45+0000\n"
+"POT-Creation-Date: 2020-04-14 03:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -294,20 +294,20 @@ msgstr "票价(元)"
 msgid "Buy Ticket"
 msgstr "购票"
 
-#: timetable_tool/utils.py:148
+#: timetable_tool/utils.py:157
 msgid "on 2nd day"
 msgstr "（第二天）"
 
-#: timetable_tool/utils.py:150
+#: timetable_tool/utils.py:159
 msgid "on 3rd day"
 msgstr "（第三天）"
 
-#: timetable_tool/utils.py:152
+#: timetable_tool/utils.py:161
 #, python-format
 msgid "on %(del)dth day"
 msgstr "（第%(del)d天）"
 
-#: timetable_tool/utils.py:157
+#: timetable_tool/utils.py:166
 #, python-format
 msgid "%(hr_str)sh %(min_str)smin"
 msgstr "%(hr_str)s小时%(min_str)s分"
@@ -322,38 +322,38 @@ msgstr "无效输入！"
 msgid "Error: Invalid input"
 msgstr "无效输入！"
 
-#: timetable_tool/views.py:159
+#: timetable_tool/views.py:161
 msgid "No tickets are sold!"
 msgstr "本票不发售！"
 
-#: timetable_tool/views.py:165
+#: timetable_tool/views.py:167
 msgid "You have bought this ticket!"
 msgstr "您已购买本车次车票！"
 
-#: timetable_tool/views.py:167
+#: timetable_tool/views.py:169
 msgid "Tickets are not enough!"
 msgstr "票额不足！"
 
-#: timetable_tool/views.py:169
+#: timetable_tool/views.py:171
 msgid "Success!"
 msgstr "下单成功！"
 
-#: timetable_tool/views.py:195
+#: timetable_tool/views.py:197
 msgid "Ticket isn't refunded!"
 msgstr "取消退票！"
 
-#: timetable_tool/views.py:199 timetable_tool/views.py:205
+#: timetable_tool/views.py:201 timetable_tool/views.py:207
 msgid "Ticket doesn't exist!"
 msgstr "车票不存在"
 
-#: timetable_tool/views.py:213
+#: timetable_tool/views.py:215
 #, python-format
 msgid ""
 "Ticket is cancelled successfully and %(money)s Yuan will return to your "
 "account!"
 msgstr "退票成功，%(money)s 元将退还您的帐户！"
 
-#: timetable_tool/views.py:215
+#: timetable_tool/views.py:217
 msgid "Past Ticket cannont be cancelled!"
 msgstr "已出发车次无法退票！"
 

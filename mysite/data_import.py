@@ -12,9 +12,9 @@ def get_group_sql(group_name):
             + "VALUES ('{}');\n".format(group_name) 
     return s0
 
-def get_station_sql(stop, group_id):
-    s1 = "INSERT INTO timetable_tool_stations (station_name, group_city_id) " \
-            + "VALUES ('{}', {});\n".format(stop, group_id) 
+def get_station_sql(stop, stop_cn, group_id):
+    s1 = "INSERT INTO timetable_tool_stations (station_name, station_name_cn, group_city_id) " \
+            + "VALUES ('{}', '{}', {});\n".format(stop, stop_cn, group_id) 
     return s1
 
 def get_route_sql(number, fromid, toid):
@@ -46,15 +46,17 @@ def count_stations(filepath_read, filepath_write):
     for line_r in lines_r:
         if line_r == '\n':
             continue
-        item = line_r[:-1]  # remove last '\n'
-        if(item[0] == '-'):  # station of the same city
-            item = item[1:]
+        items = line_r[:-1].split()
+        if(len(items) is 3):
+            items[1] = items[1] + ' ' + items[2]
+        if(items[0][0] == '-'):  # station of the same city
+            items[0] = items[0][1:]
         else:
-            f_write.writelines(get_group_sql(item)) 
+            f_write.writelines(get_group_sql(items[1])) 
             group_count += 1
 
-        f_write.writelines(get_station_sql(item, group_count)) 
-        station2id[item] = count
+        f_write.writelines(get_station_sql(items[1], items[0], group_count)) 
+        station2id[items[1]] = count
         count += 1
           
     f_read.close()

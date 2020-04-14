@@ -3,6 +3,7 @@ import datetime
 from timetable_tool.models import tickets, stations, train_records, stop_records
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import get_language
 
 def query_db(query, args=(), one=False, commit=False):
     cursor = connection.cursor()
@@ -47,6 +48,7 @@ def get_route_query(route_in, date_in):
     print(route_in_real)
 
     route_query = "SELECT S.id AS station_id, S.station_name AS station_name, " \
+                        + "S.station_name_cn AS station_name_cn, " \
                         + "T.id AS train_record_id, TR.station_no AS station_no, " \
                         + "TR.arr_time AS arr_time, TR.arr_day AS arr_day, " \
                         + "TR.dep_time AS dep_time, TR.km AS km " \
@@ -63,17 +65,22 @@ def get_route_query(route_in, date_in):
 
 
 def get_station_query(station_in, date_in):
-    station_query = "SELECT S.id AS station_id, S.station_name AS station_name," \
+    query1 = "SELECT S.id AS station_id, S.station_name AS station_name," \
+                    + "S.station_name_cn AS station_name_cn," \
                         + "T.id AS train_record_id, T.train_number as train_number," \
                     + "S1.station_name AS station_from, S2.station_name AS station_to, " \
+                    + "S1.station_name_cn AS station_from_cn, S2.station_name_cn AS station_to_cn, " \
                     + "TR.arr_time AS arr_time, " \
                     + "TR.dep_time AS dep_time " \
                     + "FROM timetable_tool_stations S, timetable_tool_train_records T, " \
-                    + "timetable_tool_stop_records TR, timetable_tool_stations S1, timetable_tool_stations S2 " \
-                    + "WHERE S.station_name = %s " \
-                        + "AND S.id = TR.station_id AND T.id = TR.train_record_id " \
+                    + "timetable_tool_stop_records TR, timetable_tool_stations S1, timetable_tool_stations S2 "
+    query3 = "AND S.id = TR.station_id AND T.id = TR.train_record_id " \
                     +"AND T.train_from_id = S1.id AND T.train_to_id = S2.id " \
                     + "ORDER BY T.train_number"
+    if(is_cn()):
+        station_query = query1 + "WHERE S.station_name_cn = %s " + query3
+    else:
+        station_query = query1 + "WHERE S.station_name = %s " + query3
     station_results = query_db(station_query, args = [station_in])
     for station_result in station_results:
         station_result["train_link"] = replace_from_dash(station_result["train_number"])
@@ -82,44 +89,47 @@ def get_station_query(station_in, date_in):
 # [station_depart, station_dest, station_depart_id, station_dest_id, train_record_id, station_to
 #  station_from, station_to, dep_time, dep_day, arr_time, arr_day, TRto_id, TRfrom_id,
 # train_link, day_str, time_delta]
-def get_train_query(depart_in, dest_in, date_in):
-    group_from = stations.objects.filter(station_name = depart_in)
-    group_to = stations.objects.filter(station_name = dest_in)
+def get_train_query(depart_in, dest_in, date_in): 
+    q_is_cn = is_cn()
+    if(q_is_cn):
+        group_from = stations.objects.filter(station_name_cn = depart_in)
+        group_to = stations.objects.filter(station_name_cn = dest_in)
+    else:
+        group_from = stations.objects.filter(station_name = depart_in)
+        group_to = stations.objects.filter(station_name = dest_in)
+    
     if(not group_from or not group_to):
         return {}
+    q1 = "SELECT Sfrom.station_name AS station_depart, Sto.station_name AS station_dest, " \
+            + "Sfrom.station_name_cn AS station_depart_cn, Sto.station_name_cn AS station_dest_cn, "\
+            + "Sfrom.id AS station_depart_id, Sto.id AS station_dest_id, " \
+            + "T.id AS train_record_id, T.train_number AS train_number, " \
+            + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, " \
+            + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
+            + "TRfrom.km AS km_from, TRto.km AS km_to, "\
+            + "TRto.id AS TRto_id, TRfrom.id AS TRfrom_id " \
+        + "FROM timetable_tool_stations Sfrom, timetable_tool_stations Sto, timetable_tool_stop_records TRfrom, " \
+            + "timetable_tool_stop_records TRto, timetable_tool_train_records T "
     if(group_from[0].group_city_id == group_to[0].group_city_id):   # corner case
-        train_query = "SELECT Sfrom.station_name AS station_depart, Sto.station_name AS station_dest," \
-                        + "Sfrom.id AS station_depart_id, Sto.id AS station_dest_id, " \
-                        + "T.id AS train_record_id, T.train_number AS train_number, " \
-                        + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, " \
-                        + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
-                        + "TRfrom.km AS km_from, TRto.km AS km_to, "\
-                        + "TRto.id AS TRto_id, TRfrom.id AS TRfrom_id " \
-                    + "FROM timetable_tool_stations Sfrom, timetable_tool_stations Sto, timetable_tool_stop_records TRfrom, " \
-                        + "timetable_tool_stop_records TRto, timetable_tool_train_records T " \
-                    + "WHERE Sfrom.station_name = %s " \
-                        + "AND Sto.station_name = %s " \
-                        + "AND Sfrom.id = TRfrom.station_id AND Sto.id = TRto.station_id " \
-                        + "AND TRfrom.station_no < TRto.station_no AND TRfrom.train_record_id = TRto.train_record_id " \
-                        + "AND TRfrom.train_record_id = T.id " \
-                    + "ORDER BY T.train_number"
-        train_results = query_db(train_query, [depart_in, dest_in])
+        if(q_is_cn):
+            q2 = "WHERE Sfrom.station_name_cn = %s AND Sto.station_name_cn = %s "
+        else:
+            q2 = "WHERE Sfrom.station_name = %s AND Sto.station_name = %s "
+        
+        q3 = "AND Sfrom.id = TRfrom.station_id AND Sto.id = TRto.station_id " \
+                + "AND TRfrom.station_no < TRto.station_no AND TRfrom.train_record_id = TRto.train_record_id " \
+                + "AND TRfrom.train_record_id = T.id " \
+            + "ORDER BY T.train_number"
+        train_query = q1 + q2 + q3
+        train_results = query_db(train_query , [depart_in, dest_in])
     else:
-        train_query = "SELECT Sfrom.station_name AS station_depart, Sto.station_name AS station_dest," \
-                            + "Sfrom.id AS station_depart_id, Sto.id AS station_dest_id," \
-                            + "T.id AS train_record_id, T.train_number AS train_number, " \
-                            + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, " \
-                            + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
-                            + "TRfrom.km AS km_from, TRto.km AS km_to, "\
-                            + "TRto.id AS TRto_id, TRfrom.id AS TRfrom_id " \
-                        + "FROM timetable_tool_stations Sfrom, timetable_tool_stations Sto, timetable_tool_stop_records TRfrom, " \
-                            + "timetable_tool_stop_records TRto, timetable_tool_train_records T " \
-                        + "WHERE Sfrom.group_city_id = {} " \
+        q2 = "WHERE Sfrom.group_city_id = {} " \
                             + "AND Sto.group_city_id = {} " \
                             + "AND Sfrom.id = TRfrom.station_id AND Sto.id = TRto.station_id " \
                             + "AND TRfrom.station_no < TRto.station_no AND TRfrom.train_record_id = TRto.train_record_id " \
                             + "AND TRfrom.train_record_id = T.id " \
                         + "ORDER BY T.train_number, Sfrom.station_name, Sto.station_name"
+        train_query = q1 + q2
         train_results = query_db(train_query.format(group_from[0].group_city_id, group_to[0].group_city_id), [])
         # remove duplicated results
         idx_keep = []
@@ -182,6 +192,7 @@ def get_ticket_bought(user_id_in, mode = 'future'):
                     + "TRfrom.dep_time AS dep_time, TRfrom.dep_day AS dep_day, "\
                     + "TRto.arr_time AS arr_time, TRto.arr_day AS arr_day, " \
                     + "S1.station_name AS station_from, S2.station_name AS station_to, "\
+                    + "S1.station_name AS station_from_cn, S2.station_name AS station_to_cn, "\
                     + "T.train_number AS train_number "\
                     + "FROM timetable_tool_tickets_sold AS TKS, timetable_tool_tickets AS TK, "\
                     + "timetable_tool_stop_records AS TRfrom, timetable_tool_stop_records AS TRto, "\
@@ -225,6 +236,7 @@ def get_stop_record_info(stop_record_id_in, is_arr = False):
     route_obj = train_records.objects.get(id =  stop_record_obj.train_record_id)
     station_obj = stations.objects.get(id =  stop_record_obj.station_id)
     stop_info['station_name'] = station_obj.station_name
+    stop_info['station_name_cn'] = station_obj.station_name_cn
     stop_info['train_number'] = route_obj.train_number
     stop_info['km'] = stop_record_obj.km
     return stop_info
@@ -245,3 +257,5 @@ def can_cancel(ticket_session_obj, idx):
     return (ticket_datetime > datetime.datetime.now())
     
 
+def is_cn():
+    return get_language() == 'zh-hans'

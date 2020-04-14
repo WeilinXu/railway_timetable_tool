@@ -18,6 +18,10 @@ class stations(models.Model):   # actual name: timetable_tool_stations
             max_length = settings.MAX_STATION_LENGTH,
             validators=[MinLengthValidator(2, "Station Name must be greater than 1 character")]
     )
+    station_name_cn = models.CharField(
+            max_length = settings.MAX_STATION_LENGTH,
+            validators=[MinLengthValidator(2, "Station Name must be greater than 1 character")]
+    )
     group_city = models.ForeignKey(station_groups, related_name='group_id', on_delete=models.CASCADE) 
 
     def __str__(self):

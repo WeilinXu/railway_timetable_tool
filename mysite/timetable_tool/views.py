@@ -131,6 +131,8 @@ class TicketListView(LoginRequiredMixin, View):
             request.session['my_tickets'][user_ticket["ticket_id"]] = \
                     {"station_from": user_ticket["station_from"], \
                     "station_to": user_ticket["station_to"], \
+                    "station_from_cn": user_ticket["station_from_cn"], \
+                    "station_to_cn": user_ticket["station_to_cn"], \
                     "train_number": user_ticket["train_number"], \
                     "depart_date": str(user_ticket["train_date"]), \
                     "depart_time": str(user_ticket['dep_time']),\
@@ -219,11 +221,17 @@ class TicketCancelView(LoginRequiredMixin, View):
 def station_autocomplete(request):  # get_town
     if request.is_ajax():
         q = request.GET.get('term', '')
-        stations_down = stations.objects.filter(Q(station_name__startswith = q))
         results = []
-        for station_down in stations_down:
-            name_json = station_down.station_name   # name
-            results.append(name_json)
+        if(is_cn()):
+            stations_down = stations.objects.filter(Q(station_name_cn__startswith = q))
+            for station_down in stations_down:
+                name_json = station_down.station_name_cn   # name
+                results.append(name_json)
+        else:
+            stations_down = stations.objects.filter(Q(station_name__startswith = q))
+            for station_down in stations_down:
+                name_json = station_down.station_name   # name
+                results.append(name_json)
         data = {'result_list': results}
         return JsonResponse(data)
 

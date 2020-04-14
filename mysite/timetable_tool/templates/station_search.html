@@ -31,13 +31,16 @@
     {% for route in routes %}
     <tr>
         <td> <a href = "{% url 'timetable_tool:route_search2' route.train_link date_input %}">{{ route.train_number }}</a> </td>
-        <td>{{ route.station_name }} </td>
-        <td>{{ route.station_from }} </td> 
-        <td>{{ route.station_to}} </td>
         {% if LANGUAGE_CODE == 'zh-hans' %}
+            <td>{{ route.station_name_cn }} </td>
+            <td>{{ route.station_from_cn }} </td> 
+            <td>{{ route.station_to_cn}} </td>
             <td>{{ route.arr_time | date:"H:i"}}</td>
             <td>{{ route.dep_time | date:"H:i"}}</td>
         {% else %}
+            <td>{{ route.station_name }} </td>
+            <td>{{ route.station_from }} </td> 
+            <td>{{ route.station_to}} </td>
             <td>{{ route.arr_time | date:"h:i a"}}</td>
             <td>{{ route.dep_time | date:"h:i a"}}</td>
         {% endif %}
