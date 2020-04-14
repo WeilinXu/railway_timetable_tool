@@ -73,8 +73,10 @@ def station_search(request, station_input = None, date_input = None):
             return render(request, "station_search.html", context)
         
         routes = get_station_query(station_input, date_input)
-        context = {"station_input": station_input, "date_input": date_input, \
+        context = {"date_input": date_input, \
                 "routes": routes, "station_form": station_form}
+        context["station_input"], context[ "station_input_cn"] \
+            = get_station_names(station_input)
         return render(request, "station_search.html", context)
 
 
@@ -105,8 +107,12 @@ def train_search(request, depart_input = None, dest_input = None, date_input = N
             return render(request, "train_search.html", context)
         
         trains = get_train_query(depart_input, dest_input, date_input)
-        context = {"depart_input": depart_input, "dest_input": dest_input, \
-                "date_input": date_input, "trains": trains, "train_form": train_form}
+        context = {"date_input": date_input, \
+                "trains": trains, "train_form": train_form}
+        context["depart_input"], context[ "depart_input_cn"] \
+            = get_station_names(depart_input)
+        context["dest_input"], context[ "dest_input_cn"] \
+            = get_station_names(dest_input)
         return render(request, "train_search.html", context)
 
 class TicketListView(LoginRequiredMixin, View):
@@ -223,6 +229,7 @@ def station_autocomplete(request):  # get_town
         q = request.GET.get('term', '')
         results = []
         if(is_cn()):
+            print("enter")
             stations_down = stations.objects.filter(Q(station_name_cn__startswith = q))
             for station_down in stations_down:
                 name_json = station_down.station_name_cn   # name

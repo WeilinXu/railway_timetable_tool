@@ -9,13 +9,15 @@
 {% trans "Search" as route_search_str %}
 <input class="btn btn_search" type="submit" name="submit" value="{{route_search_str}}">
 </form>
+{% get_current_language as LANGUAGE_CODE %}
 {% if routes %}
-<p  class = "p_info">{% trans "Routes for" %}&nbsp;<b>{{station_input}}</b>&nbsp;{% trans "on" %}&nbsp;<b>{{date_input}}</b></p> 
+<p  class = "p_info">{% trans "Routes for" %}&nbsp;
+    <b>{% if LANGUAGE_CODE == 'zh-hans' %}{{station_input_cn}}{% else %}{{station_input}}{% endif %}</b>
+    &nbsp;{% trans "on" %}&nbsp;<b>{{date_input}}</b></p> 
 {% else %}
 <p> <br> </p>
 {% endif %}
 <table id="station_table">
-    {% get_current_language as LANGUAGE_CODE %}
     <tr>
         <th>{%trans "Train No." %}</th> <th>{% trans "Station"%} </th> 
         <th>{% trans "From" %}</th> <th>{% trans "To"%}</th> 

@@ -77,11 +77,8 @@ def get_station_query(station_in, date_in):
     query3 = "AND S.id = TR.station_id AND T.id = TR.train_record_id " \
                     +"AND T.train_from_id = S1.id AND T.train_to_id = S2.id " \
                     + "ORDER BY T.train_number"
-    if(is_cn()):
-        station_query = query1 + "WHERE S.station_name_cn = %s " + query3
-    else:
-        station_query = query1 + "WHERE S.station_name = %s " + query3
-    station_results = query_db(station_query, args = [station_in])
+    station_query = query1 + "WHERE (S.station_name_cn = %s OR S.station_name = %s) " + query3
+    station_results = query_db(station_query, args = [station_in, station_in])
     for station_result in station_results:
         station_result["train_link"] = replace_from_dash(station_result["train_number"])
     return station_results
@@ -91,12 +88,8 @@ def get_station_query(station_in, date_in):
 # train_link, day_str, time_delta]
 def get_train_query(depart_in, dest_in, date_in): 
     q_is_cn = is_cn()
-    if(q_is_cn):
-        group_from = stations.objects.filter(station_name_cn = depart_in)
-        group_to = stations.objects.filter(station_name_cn = dest_in)
-    else:
-        group_from = stations.objects.filter(station_name = depart_in)
-        group_to = stations.objects.filter(station_name = dest_in)
+    group_from = stations.objects.filter(Q(station_name_cn = depart_in) | Q(station_name = depart_in))
+    group_to = stations.objects.filter(Q(station_name_cn = dest_in) | Q(station_name = dest_in))
     
     if(not group_from or not group_to):
         return {}
@@ -111,17 +104,14 @@ def get_train_query(depart_in, dest_in, date_in):
         + "FROM timetable_tool_stations Sfrom, timetable_tool_stations Sto, timetable_tool_stop_records TRfrom, " \
             + "timetable_tool_stop_records TRto, timetable_tool_train_records T "
     if(group_from[0].group_city_id == group_to[0].group_city_id):   # corner case
-        if(q_is_cn):
-            q2 = "WHERE Sfrom.station_name_cn = %s AND Sto.station_name_cn = %s "
-        else:
-            q2 = "WHERE Sfrom.station_name = %s AND Sto.station_name = %s "
-        
+        q2 = "WHERE ((Sfrom.station_name_cn = %s AND Sto.station_name_cn = %s) " \
+                +"OR (Sfrom.station_name = %s AND Sto.station_name = %s )) "
         q3 = "AND Sfrom.id = TRfrom.station_id AND Sto.id = TRto.station_id " \
                 + "AND TRfrom.station_no < TRto.station_no AND TRfrom.train_record_id = TRto.train_record_id " \
                 + "AND TRfrom.train_record_id = T.id " \
             + "ORDER BY T.train_number"
         train_query = q1 + q2 + q3
-        train_results = query_db(train_query , [depart_in, dest_in])
+        train_results = query_db(train_query , [depart_in, dest_in, depart_in, dest_in])
     else:
         q2 = "WHERE Sfrom.group_city_id = {} " \
                             + "AND Sto.group_city_id = {} " \
@@ -259,3 +249,9 @@ def can_cancel(ticket_session_obj, idx):
 
 def is_cn():
     return get_language() == 'zh-hans'
+
+def get_station_names(station_in):
+    tmp = stations.objects.get(Q(station_name_cn = station_in) | Q(station_name = station_in))
+    if(tmp):
+        return tmp.station_name, tmp.station_name_cn
+    return station_in, station_in

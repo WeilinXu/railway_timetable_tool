@@ -11,7 +11,11 @@
 <input class="btn" type="button" onclick="swap_input()" value="&#8646">
 </form>
 {% if trains %}
-<p class = "p_info">{% trans "Trains from" %}&nbsp;<b>{{depart_input}}</b>&nbsp;{% trans "to" %}&nbsp;<b>{{dest_input}}</b>&nbsp;{% trans "on" %}&nbsp;<b>{{date_input}}</b></p> 
+<p class = "p_info">{% trans "Trains from" %}&nbsp;
+    <b>{% if LANGUAGE_CODE == 'zh-hans' %}{{depart_input_cn}}{% else %}{{depart_input}}{% endif %}</b>
+    &nbsp;{% trans "to" %}&nbsp;
+    <b>{% if LANGUAGE_CODE == 'zh-hans' %}{{dest_input_cn}}{% else %}{{dest_input}}{% endif %}</b>
+    &nbsp;{% trans "on" %}&nbsp;<b>{{date_input}}</b></p> 
 {% else %}
 <p> <br> </p>
 {% endif %}
