@@ -15,6 +15,7 @@
 <p> <br> </p>
 {% endif %}
 <table>
+    {% get_current_language as LANGUAGE_CODE %}
     <tr>
         <th> {% trans "Stop No." %}</th> <th style="text-align:center"> {% trans "Station" %} </th> 
         <th>{% trans "Arrive Time" %}</th>  <th>{% trans "Depart Time" %}</th> 
@@ -24,8 +25,13 @@
     <tr>
         <td> {{ stop.station_no }} </td>
         <td> <a href = "{% url 'timetable_tool:station_search2' stop.station_name date_input %}">{{ stop.station_name }}</a> </td>
-        <td> {{ stop.arr_time | date:"h:i a"}} </td>
-        <td> {{ stop.dep_time | date:"h:i a"}} </td>
+        {% if LANGUAGE_CODE == 'zh-hans' %}
+            <td>{{ stop.arr_time | date:"H:i"}}</td>
+            <td>{{ stop.dep_time | date:"H:i"}}</td>
+        {% else %}
+            <td>{{ stop.arr_time | date:"h:i a"}}</td>
+            <td>{{ stop.dep_time | date:"h:i a"}}</td>
+        {% endif %}
         <td> {{ stop.arr_day }} </td>
         <td> {{ stop.km }} </td>
     </tr>

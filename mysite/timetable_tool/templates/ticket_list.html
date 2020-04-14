@@ -18,6 +18,7 @@
     <p  class = "p_info"> <b>{{his_str}}</b></p> 
 {% endif %}
 <table>
+    {% get_current_language as LANGUAGE_CODE %}
     <tr> 
         <th> {%trans "Ticket No." %} </th> <th>{%trans "Train No." %} </th> 
         <th> {%trans "Departure Info" %} </th> <th> {%trans "Arrival Info" %} </th>
@@ -30,13 +31,21 @@
         <td>
             <p class = "mid_info">
                 <span class = "mid_info_bold">{{ ticket.station_from}} </span> <br>
-                {{ ticket.dep_datetime | date:"h:i a M-d-Y"}}
+                {% if LANGUAGE_CODE == 'zh-hans' %}
+                    {{ ticket.dep_datetime | date:"H:i Y-M-d"}}
+                {% else %}
+                    {{ ticket.dep_datetime | date:"h:i a M-d-Y"}}
+                {% endif %}
             </p>
         </td>
         <td>
             <p class = "mid_info">
                     <span class = "mid_info_bold">{{ ticket.station_to }} </span>  <br>
-                {{ ticket.arr_datetime | date:"h:i a M-d-Y"}}
+                {% if LANGUAGE_CODE == 'zh-hans' %}
+                    {{ ticket.arr_datetime | date:"H:i Y-M-d"}}
+                {% else %}
+                    {{ ticket.arr_datetime | date:"h:i a M-d-Y"}}
+                {% endif %}
             </p>
         </td>
         <td> {{ticket.seat_number}}</td>

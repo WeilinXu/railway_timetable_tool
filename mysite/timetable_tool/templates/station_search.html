@@ -15,6 +15,7 @@
 <p> <br> </p>
 {% endif %}
 <table id="station_table">
+    {% get_current_language as LANGUAGE_CODE %}
     <tr>
         <th>{%trans "Train No." %}</th> <th>{% trans "Station"%} </th> 
         <th>{% trans "From" %}</th> <th>{% trans "To"%}</th> 
@@ -33,8 +34,13 @@
         <td>{{ route.station_name }} </td>
         <td>{{ route.station_from }} </td> 
         <td>{{ route.station_to}} </td>
-        <td>{{ route.arr_time | date:"h:i a"}}</td>
-        <td>{{ route.dep_time | date:"h:i a"}}</td>
+        {% if LANGUAGE_CODE == 'zh-hans' %}
+            <td>{{ route.arr_time | date:"H:i"}}</td>
+            <td>{{ route.dep_time | date:"H:i"}}</td>
+        {% else %}
+            <td>{{ route.arr_time | date:"h:i a"}}</td>
+            <td>{{ route.dep_time | date:"h:i a"}}</td>
+        {% endif %}
     </tr>
     {% endfor %}
 </table>

@@ -2,6 +2,7 @@ from django.db import connection, transaction
 import datetime
 from timetable_tool.models import tickets, stations, train_records, stop_records
 from django.db.models import Q
+from django.utils.translation import ugettext_lazy as _
 
 def query_db(query, args=(), one=False, commit=False):
     cursor = connection.cursor()
@@ -144,16 +145,17 @@ def get_train_query(depart_in, dest_in, date_in):
         if(delta_day == 0):
             train_result["day_str"] = ""
         elif(delta_day == 1):
-            train_result["day_str"] = "on 2nd day"
+            train_result["day_str"] = _("on 2nd day")
         elif(delta_day == 2):
-            train_result["day_str"] = "on 3rd day"
+            train_result["day_str"] = _("on 3rd day")
         else:
-            train_result["day_str"] = "on " + str(delta_day) + "th day"
+            train_result["day_str"] = _("on %(del)dth day") % {'del' : str(delta_day)}
         
         t2 = datetime.datetime.combine(arr_date, train_result["arr_time"])
         t1 = datetime.datetime.combine(cur_day, train_result["dep_time"])
         time_delta_raw = (t2 - t1).total_seconds()
-        train_result['time_delta'] = "%02dh %02dmin"%(time_delta_raw // 3600, (time_delta_raw % 3600) // 60)
+        train_result['time_delta'] = _("%(hr_str)sh %(min_str)smin")% {'hr_str' : ("%02d" % ((time_delta_raw // 3600))), \
+                    'min_str' : ("%02d" % ((time_delta_raw % 3600) // 60))}
         train_result['km_delta'] = train_result['km_to'] - train_result['km_from']
         train_result['price'] = get_price(train_result['km_delta'])
         # seat avaliable search

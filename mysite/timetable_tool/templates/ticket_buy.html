@@ -3,13 +3,27 @@
 {% block content %}
 <h3 class = "my_h3"> {% trans "Place Order" %} </h3> 
 <div class = "p_ticket_info">
+    {% get_current_language as LANGUAGE_CODE %}
     {% trans "Train" %}&nbsp;<span class = "large_bold">{{dep_info.train_number}}</span>: <br>
     {% trans "Depart from" %}&nbsp;<span class = "large_bold">{{dep_info.station_name}}</span> {% trans "on" %}&nbsp;  
-    <span class = "large_bold">{{dep_date | date:"M-d-Y"}}</span> &nbsp;
-    <span class = "large_bold">{{dep_info.stop_time | date:"h:i a"}}</span>, <br>
+    
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+        <span class = "large_bold">{{dep_date | date:"Y-M-d"}}</span> &nbsp;
+        <span class = "large_bold">{{dep_info.stop_time | date:"H:i"}}</span>, <br>
+    {% else %}
+        <span class = "large_bold">{{dep_date | date:"M-d-Y"}}</span> &nbsp;
+        <span class = "large_bold">{{dep_info.stop_time | date:"h:i a"}}</span>, <br>
+    {% endif %}
+    
     {% trans "Arrive at" %}&nbsp;<span class = "large_bold">{{arr_info.station_name}}</span> {% trans "on" %}&nbsp; 
-<span class = "large_bold">{{arr_date | date:"M-d-Y"}}</span> &nbsp;
-<span class = "large_bold">{{arr_info.stop_time | date:"h:i a"}}</span> <br>
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+        <span class = "large_bold">{{arr_date | date:"Y-M-d"}}</span> &nbsp;
+        <span class = "large_bold">{{arr_info.stop_time | date:"H:i"}} </span> <br>   
+    {% else %}
+        <span class = "large_bold">{{arr_date | date:"M-d-Y"}}</span> &nbsp;
+        <span class = "large_bold">{{arr_info.stop_time | date:"h:i a"}} </span> <br>  
+    {% endif %}
+    
 {% trans "Price" %}: <span class = "large_bold" id = "price_out_id"> 0 </span>  {% trans "Yuan" %} &nbsp; 
 (<span id="ticket_price">{{price}} </span> {% trans "Yuan per Ticket" %})
 </div> 
