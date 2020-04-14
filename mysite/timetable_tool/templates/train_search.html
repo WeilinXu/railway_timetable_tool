@@ -6,11 +6,12 @@
 <form>
 {% csrf_token %}
 {{train_form}}
-<input class="btn btn_search" type="submit" name="submit" value="Search">
+{% trans "Search" as train_search_str %}
+<input class="btn btn_search" type="submit" name="submit" value="{{train_search_str}}">
 <input class="btn" type="button" onclick="swap_input()" value="&#8646">
 </form>
 {% if trains %}
-<p class = "p_info">Trains from <b>{{depart_input}}</b> to <b>{{dest_input}}</b> on <b>{{date_input}}</b></p> 
+<p class = "p_info">{% trans "Trains from" %}&nbsp;<b>{{depart_input}}</b>&nbsp;{% trans "to" %}&nbsp;<b>{{dest_input}}</b>&nbsp;{% trans "on" %}&nbsp;<b>{{date_input}}</b></p> 
 {% else %}
 <p> <br> </p>
 {% endif %}
@@ -36,7 +37,7 @@
     {% for train in trains %}
     <tr>
             
-        <td> <a href="{% url 'timetable_tool:route_search2' train.train_link date_input%}">{{train.train_number }}</a> </td>
+        <td> <a href="{% url 'timetable_tool:route_search2' train.train_link date_input%}">{{train.train_number}}</a> </td>
         <td>{{ train.station_depart }} </td>
         <td>{{ train.station_dest}}</td>
         <td>{{ train.dep_time | date:"h:i a"}} </td>
@@ -46,7 +47,7 @@
         <td> {{train.price}} </td>
         <td>
             {% if train.can_buy %}
-                <a href="{% url 'timetable_tool:ticket_buy' train.TRfrom_id train.TRto_id date_input%}" class="btn btn-secondary">Buy Ticket</a>
+                <a href="{% url 'timetable_tool:ticket_buy' train.TRfrom_id train.TRto_id date_input%}" class="btn btn-secondary">{% trans "Buy Ticket" %}</a>
             {% endif %}  
         </td>
     </tr>

@@ -6,10 +6,11 @@
 <form>
 {% csrf_token %}
 {{station_form}}
-<input class="btn btn_search" type="submit" name="submit" value="Search">
+{% trans "Search" as route_search_str %}
+<input class="btn btn_search" type="submit" name="submit" value="{{route_search_str}}">
 </form>
 {% if routes %}
-<p  class = "p_info">Routes for <b>{{station_input}}</b> on <b>{{date_input}}</b></p> 
+<p  class = "p_info">{% trans "Routes for" %}&nbsp;<b>{{station_input}}</b>&nbsp;{% trans "on" %}&nbsp;<b>{{date_input}}</b></p> 
 {% else %}
 <p> <br> </p>
 {% endif %}

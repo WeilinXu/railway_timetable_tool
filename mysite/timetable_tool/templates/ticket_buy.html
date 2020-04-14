@@ -3,22 +3,23 @@
 {% block content %}
 <h3 class = "my_h3"> {% trans "Place Order" %} </h3> 
 <div class = "p_ticket_info">
-    Train <span class = "large_bold">{{dep_info.train_number}}</span>: <br>
-    Depart from <span class = "large_bold">{{dep_info.station_name}}</span> on  
+    {% trans "Train" %}&nbsp;<span class = "large_bold">{{dep_info.train_number}}</span>: <br>
+    {% trans "Depart from" %}&nbsp;<span class = "large_bold">{{dep_info.station_name}}</span> {% trans "on" %}&nbsp;  
     <span class = "large_bold">{{dep_date | date:"M-d-Y"}}</span> &nbsp;
     <span class = "large_bold">{{dep_info.stop_time | date:"h:i a"}}</span>, <br>
-Arrive at <span class = "large_bold">{{arr_info.station_name}}</span> on 
+    {% trans "Arrive at" %}&nbsp;<span class = "large_bold">{{arr_info.station_name}}</span> {% trans "on" %}&nbsp; 
 <span class = "large_bold">{{arr_date | date:"M-d-Y"}}</span> &nbsp;
 <span class = "large_bold">{{arr_info.stop_time | date:"h:i a"}}</span> <br>
-Price: <span class = "large_bold" id = "price_out_id"> 0 </span>  Yuan 
-(<span id="ticket_price">{{price}} </span> Yuan per Ticket)
+{% trans "Price" %}: <span class = "large_bold" id = "price_out_id"> 0 </span>  {% trans "Yuan" %} &nbsp; 
+(<span id="ticket_price">{{price}} </span> {% trans "Yuan per Ticket" %})
 </div> 
 <p> <br> </p>
 <form method="post">
     {% csrf_token %}
-    Quantity <input id= 'quantity_in_id' type="number" min="1" max={{settings.MAX_TICKETS_BOOKED}} step="1" name="quantity" autocomplete="off" required oninput="calc()">
-    <input class="btn btn_search" type="submit" name="submit" value="Book">
-    <a href="{% url 'timetable_tool:train_search' %}" class="btn btn_search">Cancel</a>
+    {% trans "Book" as book_str %}
+    {% trans "Quantity" %}&nbsp;<input id= 'quantity_in_id' type="number" min="1" max={{settings.MAX_TICKETS_BOOKED}} step="1" name="quantity" autocomplete="off" required oninput="calc()">
+    <input class="btn btn_search" type="submit" name="submit" value="{{book_str}}">
+    <a href="{% url 'timetable_tool:train_search' %}" class="btn btn_search">{% trans "Cancel" %}</a>
 </form>
 
 <script>

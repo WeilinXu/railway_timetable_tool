@@ -3,17 +3,19 @@
 {% block content %}
 <h3 class = "my_h3"> {%trans "My Tickets" %} </h3> 
 <p> <br> </p>
+{% trans "Future Reservation" as future_str %}
+{% trans "Historical Tickets" as his_str %}
 <form>{% csrf_token %}
-    <input class="btn btn_search"  type="submit" name="future" value="Future Reservations">
-    <input class="btn btn_search"  type="submit" name="history" value="Historical Tickets">
+    <input class="btn btn_search"  type="submit" name="future" value="{{future_str}}">
+    <input class="btn btn_search"  type="submit" name="history" value="{{his_str}}">
 </form>
 <p> <br> </p>
-{% if can_cancel %}
-    <p  class = "p_info"> <b>{%trans "Future Reservation" %}</b></p> 
+{% if can_cancel %} 
+    <p  class = "p_info"> <b>{{future_str}}</b></p> 
 {% elif empty_form %}
     <p> <br> </p>
 {% else %}
-    <p  class = "p_info"> <b>{%trans "Historical Tickets" %}</b></p> 
+    <p  class = "p_info"> <b>{{his_str}}</b></p> 
 {% endif %}
 <table>
     <tr> 
@@ -42,12 +44,12 @@
                 <p>
                     <span id="num_tickets">{{ticket.quantity}}</span> 
                     <span id="ticket_text"> Tickets</span> <br> 
-                    {{ticket.price}} Yuan 
+                    {{ticket.price}} {% trans "Yuan" %} 
                 </p>
         </td>
         <td>
             {% if can_cancel %}
-            <a href="{% url 'timetable_tool:ticket_cancel' ticket.ticket_id %}" class="btn btn-secondary">{% trans "Cancel Ticket" %}</a>
+            <a href="{% url 'timetable_tool:ticket_cancel' ticket.ticket_id %}" class="btn btn-secondary">{% trans "Refund" %}</a>
             {% endif %}
         </td>
     </tr>
