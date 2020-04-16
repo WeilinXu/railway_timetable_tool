@@ -38,6 +38,7 @@ def get_ticket_sql(tr_id1, tr_id2, ticket_date = '2020-05-05', tickets_avaliable
 
 def count_stations(filepath_read, filepath_write):
     station2id = {}
+    station2id_cn = {}
     f_read = open(filepath_read, 'r')
     f_write = open(filepath_write, 'w')
     lines_r = f_read.readlines()
@@ -57,13 +58,14 @@ def count_stations(filepath_read, filepath_write):
 
         f_write.writelines(get_station_sql(items[1], items[0], group_count)) 
         station2id[items[1]] = count
+        station2id_cn[items[0]] = count
         count += 1
           
     f_read.close()
     f_write.close()
-    return station2id
+    return station2id, station2id_cn
 
-def parse_data(filepath_read, filepath_write, station2id):
+def parse_data(filepath_read, filepath_write, station2id, station2id_cn):
     f_read = open(filepath_read, 'r')
     f_write = open(filepath_write, "a+")
     lines_r = f_read.readlines()
@@ -106,7 +108,14 @@ def parse_data(filepath_read, filepath_write, station2id):
             stop_name = items[0]
         arrive_time = datetime.datetime.strptime(items[-3], '%H:%M').time()
         depart_time = datetime.datetime.strptime(items[-2], '%H:%M').time()
-        temp = [station2id[stop_name], arrive_time, depart_time]
+        if(stop_name in station2id):
+            stop_station_id = station2id[stop_name]
+        elif(stop_name in station2id_cn):
+            stop_station_id = station2id_cn[stop_name]
+        else:
+            stop_station_id = -1
+            print("Error: no such station in table!")
+        temp = [stop_station_id, arrive_time, depart_time]
         # day convention
         if(arrive_time < last_time):
             day_u += 1
@@ -138,9 +147,9 @@ def get_filepath():
 
 def main(): 
     reads_path, readr_path, write_path = get_filepath()
-    station2id = count_stations(reads_path, write_path)
+    station2id, station2id_cn = count_stations(reads_path, write_path)
     print(station2id['Beijing'])
-    parse_data(readr_path, write_path, station2id)
+    parse_data(readr_path, write_path, station2id, station2id_cn)
 
 if __name__=="__main__": 
     main() 

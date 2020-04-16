@@ -10,6 +10,7 @@
 <input class="btn btn_search" type="submit" name="submit" value="{{train_search_str}}">
 <input class="btn" type="button" onclick="swap_input()" value="&#8646">
 </form>
+{% get_current_language as LANGUAGE_CODE %} 
 {% if trains %}
 <p class = "p_info">{% trans "Trains from" %}&nbsp;
     <b>{% if LANGUAGE_CODE == 'zh-hans' %}{{depart_input_cn}}{% else %}{{depart_input}}{% endif %}</b>
@@ -20,7 +21,6 @@
 <p> <br> </p>
 {% endif %}
 <table id = "train_table">
-    {% get_current_language as LANGUAGE_CODE %} 
     <tr> 
         <th> {%trans "Train No." %} </th> 
         <th>{% trans "Depart. Station" %} </th> <th>{% trans "Dest. Station" %}</th> 
