@@ -124,7 +124,7 @@ def get_train_query(depart_in, dest_in, date_in):
         # remove duplicated results
         idx_keep = []
         for idx in range(len(train_results)):
-            if(len(idx_keep) is 0 or train_results[idx]["train_record_id"] is not \
+            if(len(idx_keep) is 0 or train_results[idx]["train_record_id"] != \
                     train_results[idx_keep[-1]]["train_record_id"]):
                 idx_keep.append(idx)
                 is_dep = (train_results[idx]["station_depart"] == depart_in)
